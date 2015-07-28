@@ -1,0 +1,27 @@
+{
+  "name": "ng-redux",
+  "version": "0.1.0",
+  "description": "Redux bindings for Angular.js",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf lib && `npm bin`/babel src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/wbuchwalter/ng-redux"
+  },
+  "author": "William Buchwalter <wbuchwalter@gmail.com> (http://github.com/wbuchwalter)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wbuchwalter/ng-redux/issues"
+  },
+  "homepage": "https://github.com/wbuchwalter/ng-redux",
+  "devDependencies": {
+    "babel": "^5.8.12",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.10.5"
+  },
+  "peerDependencies": {
+    "redux": "^1.0.0 || 1.0.0-alpha || 1.0.0-rc"
+  }
+}
