@@ -1,10 +1,11 @@
 
 export default function connectorFactory($ngRedux) {
+  let connector;
   return {
-      connect: function(select, callback): void {
-        let connector = new Connector($ngRedux, select, callback);
-        //TODO: unsubscribe etc.
-      }
+      connect: (select, callback) => {
+        connector = new Connector($ngRedux, select, callback);
+      },
+      disconnect: connector.unsubscribe;
     }
 }
 
@@ -14,7 +15,7 @@ class Connector {
     this.callback = callback;
     this.reduxStore = $ngRedux.getStore();
     this._sliceState = angular.copy(this.select(this.reduxStore.getState()));
-    this.reduxStore.subscribe(this.onStoreChanged.bind(this));
+    this.unsubscribe = this.reduxStore.subscribe(this.onStoreChanged.bind(this));
   }
 
   onStoreChanged() {
