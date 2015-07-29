@@ -2,27 +2,27 @@
 export default function connectorFactory($ngRedux) {
   let connector;
   return {
-      connect: (select, callback) => {
-        connector = new Connector($ngRedux, select, callback);
+      connect: (select, props) => {
+        connector = new Connector($ngRedux, select, props);
       },
-      disconnect: connector.unsubscribe;
+      disconnect: () => connector.unsubscribe()
     }
 }
 
 class Connector {
-  constructor($ngRedux, select, callback){
+  constructor($ngRedux, select, props){
     this.select = select;
-    this.callback = callback;
+    this.props = props;
     this.reduxStore = $ngRedux.getStore();
-    this._sliceState = angular.copy(this.select(this.reduxStore.getState()));
+    this._sliceState = {...this.select(this.reduxStore.getState())};
     this.unsubscribe = this.reduxStore.subscribe(this.onStoreChanged.bind(this));
   }
 
   onStoreChanged() {
     let nextState = this.select(this.reduxStore.getState());
     if (!this.isSliceEqual(this._sliceState, nextState)) {
-      this.callback(nextState);
-      this._sliceState = angular.copy(nextState);
+      angular.copy(nextState, this.props);
+      this._sliceState = {...nextState};
     }
   }
 
