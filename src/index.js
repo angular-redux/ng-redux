@@ -1,4 +1,6 @@
 import connectorFactory from './connector';
+import ngReduxProvider from './provider';
 
 export default angular.module('ngRedux', [])
-  .factory('reduxConnector', connectorFactory);
+  .provider('$ngRedux', ngReduxProvider)
+  .factory('reduxConnector', ['$ngRedux', connectorFactory]);
