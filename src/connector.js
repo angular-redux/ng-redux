@@ -11,8 +11,10 @@ export default function connectorFactory(reduxStore) {
 
 class Connector {
   constructor(reduxStore, select, callback){
-    this._sliceState = angular.copy(this.select(this.reduxStore.getState()));
+    this.select = select;
+    this.callback = callback;
     this.reduxStore = reduxStore;
+    this._sliceState = angular.copy(this.select(this.reduxStore.getState()));
     reduxStore.subscribe(this.onStoreChanged.bind(this));
   }
 
