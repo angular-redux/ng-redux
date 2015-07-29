@@ -19,6 +19,7 @@
   "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
   "devDependencies": {
     "babel": "^5.8.12",
+    "babel-core": "^5.8.14",
     "babel-loader": "^5.3.2",
     "expect": "^1.8.0",
     "mocha": "^2.2.5",
