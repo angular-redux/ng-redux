@@ -43,5 +43,7 @@ class TodoLoaderController {
 ```
 
 ### Unsubscribing
-```JS reduxConnector.disconnect(); ```inb
+```JS
+    reduxConnector.disconnect(); 
+```
 
