@@ -21,8 +21,24 @@ redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 
 In a component:
 ```JS
- constructor(reduxConnector) {
-    reduxConnector.connect(state => state.todos, () => { callback... });
+ export default function todoLoader() {
+  return {
+    controllerAs: 'vm',
+    controller: TodoLoaderController,
+    template: "<div ng-repeat='todo in vm.todos'>{{todo.text}}</div>",
+    
+    [...]
+  };
+}
+
+class TodoLoaderController {    
+
+  constructor(reduxConnector) {
+    this.todos = [];
+    reduxConnector.connect(todos => todos, this.todos);
   }
+  
+  [...]
+}
 ```
 
