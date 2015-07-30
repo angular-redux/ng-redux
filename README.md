@@ -2,9 +2,10 @@
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 This a port of [react-redux](https://github.com/gaearon/react-redux).
 
-### How to use:
+### How to:
 An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuchwalter/tsRedux/blob/master/src/components/regionLister.ts).
 
+#### Configuration
 ```JS
 angular.module('app', ['ngRedux'])
 .config(($ngReduxProvider) => {
@@ -14,12 +15,14 @@ angular.module('app', ['ngRedux'])
   });
 ``` 
 
-With bindActionCreators:
-```JS
+#### Accessing Redux' Store
+You can access the store via ```$ngRedux.getStore()```
+
+```JS 
 redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 ```
 
-In a component:
+#### In a component:
 ```JS
  export default function todoLoader() {
   return {
