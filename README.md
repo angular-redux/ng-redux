@@ -50,3 +50,7 @@ class TodoLoaderController {
     reduxConnector.disconnect(); 
 ```
 
+
+## TODO
+- Handle both callbacks and copying of properties (see 1.1.2 branch)
+- Unit tests
