@@ -3,4 +3,5 @@ import ngReduxProvider from './provider';
 
 export default angular.module('ngRedux', [])
   .provider('$ngRedux', ngReduxProvider)
-  .factory('reduxConnector', ['$ngRedux', '$rootScope', connectorFactory]);
+  .factory('reduxConnector', ['$ngRedux', '$rootScope', connectorFactory])
+  .name;
