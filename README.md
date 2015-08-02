@@ -1,7 +1,7 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
-ng-redux lets you easily connect your angular components with Redux.
+ngRedux lets you easily connect your angular components with Redux.
 the API is straightforward:
 
 ```JS
@@ -16,7 +16,8 @@ state => state.todos
 Note: if you are not familiar with this syntax, go and check out the [MDN Guide on fat arrow  functions (ES2015)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 
 
-This returned object will be passed as single argument to the callback provided.
+This returned object will be passed as single argument to the callback provided whenever the state changes.
+ngRedux checks for shallow equality of the state's selected slice whenever the Store is updated, and will call the callback only if there is a change.
 
 
 #### Initialization
@@ -50,24 +51,56 @@ class TodoLoaderController {
 
   constructor(reduxConnector) {
     this.todos = [];
-    reduxConnector.connect(todos => todos, todos => this.todos = todos);
+    reduxConnector.connect(state => state.todos, todos => this.todos = todos);
   }
   
   [...]
 }
 ```
-```todos => this.todos = todos``` is just a shorthand for 
-```function(todos) { this.todos = todos }```
-using [ES2015 fat arrow syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions), so you can pass any function you like as callback, it will be called everytime the particular state you selected has changed.
+
+
+You can also create multiple connections in single component:
+
+```JS
+constructor(reduxConnector) {
+    this.todos = [];
+    this.users = [];
+    reduxConnector.connect(state => state.todos, todos => this.todos = todos);
+    reduxConnector.connect(state => state.users, users => this.users = users);
+  }
+```
 
 
 #### Unsubscribing
+There is two way of unsubscribing:
+
+You can simply close all connections created with a particular connector:
+
 ```JS
-    reduxConnector.disconnect(); 
+    reduxConnector.disconnectAll(); 
 ```
 
+Or if you need a more fine grained unsubscribing, you can close a specific connection:
+
+```JS
+
+constructor(reduxConnector) {
+    this.todos = [];
+    this.users = [];
+    this.disconnectTodos = reduxConnector.connect(state => state.todos, todos => this.todos = todos);
+    reduxConnector.connect(state => state.users, users => this.users = users);
+  }
+  
+disconnectSome() {
+    this.disconnectTodos();
+}
+
+```
+
+
 ### Accessing Redux' Store
-You can access the store via ```$ngRedux.getStore()```
+You don't need to create another service to get hold of Redux's store (although you can).
+You can access the store via ```$ngRedux.getStore()```:
 
 ```JS 
 redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
