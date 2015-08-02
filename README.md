@@ -1,6 +1,8 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
+## Overview
+
 ngRedux lets you easily connect your angular components with Redux.
 the API is straightforward:
 
@@ -15,10 +17,14 @@ state => state.todos
 ```
 Note: if you are not familiar with this syntax, go and check out the [MDN Guide on fat arrow  functions (ES2015)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 
+If you haven't, check out [reselect](https://github.com/faassen/reselect), an awesome tool to create and combine selectors.
+
 
 This returned object will be passed as single argument to the callback provided whenever the state changes.
 ngRedux checks for shallow equality of the state's selected slice whenever the Store is updated, and will call the callback only if there is a change.
 
+
+## Getting Started
 
 #### Initialization
 You need to pass Redux Store to ng-redux via ```$ngReduxProvider``` :
