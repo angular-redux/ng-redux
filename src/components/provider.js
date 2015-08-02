@@ -1,7 +1,6 @@
 export default function ngReduxProvider() {
   let reduxStoreInstance = undefined;
   this.setReduxStore = store => reduxStoreInstance = store;
-
   this.$get = () => new NgRedux(reduxStoreInstance);
 }
 

@@ -4,7 +4,8 @@
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "rm -rf lib && `npm bin`/babel src --out-dir lib"
+    "build": "rm -rf lib && `npm bin`/babel src --out-dir lib",
+    "test": "mocha --compilers js:babel/register --recursive"
   },
   "repository": {
     "type": "git",
@@ -19,9 +20,15 @@
   "devDependencies": {
     "babel": "^5.8.12",
     "babel-loader": "^5.3.2",
+    "expect": "^1.8.0",
+    "jest-cli": "^0.4.17",
+    "mocha": "^2.2.5",
     "webpack": "^1.10.5"
   },
   "peerDependencies": {
     "redux": "^1.0.0 || 1.0.0-alpha || 1.0.0-rc"
+  },
+  "dependencies": {
+    "invariant": "^2.1.0"
   }
 }
