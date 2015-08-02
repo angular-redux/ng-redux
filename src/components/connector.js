@@ -3,12 +3,18 @@ import isFunction from '../utils/isFunction';
 import invariant from 'invariant';
 
 export default function connectorFactory($ngRedux) {
-  let connector;
+  let connectors = [];
   return {
       connect: (select, target) => {
-        connector = new Connector($ngRedux, select, target);
+        let connector = new Connector($ngRedux, select, target);
+        connectors.push(connector);
+        return connector.unsubscribe;
       },
-      disconnect: () => connector.unsubscribe()
+      disconnectAll: () => {
+        for(let connector of connectors) {
+          connector.unsubscribe()
+        }
+      }
     }
 }
 

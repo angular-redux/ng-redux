@@ -1,6 +1,6 @@
 import expect from 'expect';
 import {createStore} from 'redux';
-import {Connector} from '../../src/components/connector';
+import {Connector, default as connectorFactory} from '../../src/components/connector';
 
 describe('Connector', () => {
 	let store;
@@ -58,5 +58,52 @@ describe('Connector', () => {
 		connector.unsubscribe();
 		store.dispatch({type: 'ACTION', payload: 2});
 		expect(counter).toBe(1);
+	});
+
+	it('Factory: connect should create a new Connector', () => {
+		let api = connectorFactory(ngRedux);
+		let counter = 0;
+		let callback = () => counter++;
+		api.connect(state => state, callback);
+		store.dispatch({type: 'ACTION', payload: 0});
+		store.dispatch({type: 'ACTION', payload: 1});
+		store.dispatch({type: 'ACTION', payload: 2});
+		expect(counter).toBe(3);
+	});
+
+	it('Factory: should allow multiple Connector creation', () => {
+		let api = connectorFactory(ngRedux);
+		let counter = 0;
+		let callback = () => counter++;
+		api.connect(state => state, callback);
+		api.connect(state => state, callback);
+		store.dispatch({type: 'ACTION', payload: 0});
+		expect(counter).toBe(2);
+	})
+
+	it('Factory: connect should return an unsubscribing function', () => {
+		let api = connectorFactory(ngRedux);
+		let counter = 0;
+		let callback = () => counter++;
+		let unsubscribe = api.connect(state => state, callback);
+		store.dispatch({type: 'ACTION', payload: 0});
+		unsubscribe();
+		store.dispatch({type: 'ACTION', payload: 1});
+		store.dispatch({type: 'ACTION', payload: 2});
+		expect(counter).toBe(1);
+	});
+
+	it('Factory: disconnectAll should disconnect all created connectors', () => {
+		let api = connectorFactory(ngRedux);
+		let counter = 0;
+		let callback = () => counter++;
+		api.connect(state => state, callback);
+		api.connect(state => state, callback);
+		api.connect(state => state, callback);
+		store.dispatch({type: 'ACTION', payload: 0});
+		expect(counter).toBe(3);
+		api.disconnectAll();
+		store.dispatch({type: 'ACTION', payload: 1});
+		expect(counter).toBe(3);
 	});
 });
