@@ -1,5 +1,6 @@
 import shallowEqual from '../utils/shallowEqual';
 import isFunction from '../utils/isFunction';
+import isPlainObject from '../utils/isPlainObject';
 import invariant from 'invariant';
 
 export default function connectorFactory($ngRedux) {
@@ -30,12 +31,14 @@ export class Connector {
     this.select = selector;
     this.callback = callback;
     this.reduxStore = $ngRedux.getStore();
-    this._sliceState = {...this.select(this.reduxStore.getState())};
+    this._sliceState = this.selectState(this.reduxStore.getState(), this.select);
+    //force a first update to initialize subscribing component
+    this.updateTarget(this.callback, this._sliceState);
     this.unsubscribe = this.reduxStore.subscribe(this.onStoreChanged.bind(this));
   }
 
   onStoreChanged() {
-    let nextState = this.select(this.reduxStore.getState());
+    let nextState = this.selectState(this.reduxStore.getState(), this.select);
     if (!this.isSliceEqual(this._sliceState, nextState)) {
       this.updateTarget(this.callback, nextState)
       this._sliceState = {...nextState};
@@ -49,6 +52,12 @@ export class Connector {
       typeof target
     );
     target(state) 
+  }
+
+  selectState(state, selector) {
+    let slice = selector(state);
+    
+    return slice;
   }
 
   isSliceEqual(slice, nextSlice) {
