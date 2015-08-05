@@ -1,6 +1,8 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
+![Travis](https://travis-ci.org/wbuchwalter/ng-redux.svg?branch=master)
+
 ## Overview
 
 ngRedux lets you easily connect your angular components with Redux.
