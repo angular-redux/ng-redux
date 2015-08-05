@@ -10,7 +10,7 @@ the API is straightforward:
 reduxConnector.connect(selector, callback);
 ```
 
-Where selector is a function taking for single argument the entire redux Store's state (a plain JS object) and returns another object, which is the part of the state that your component is interested in.
+Where selector is a function taking for single argument the entire redux Store's state (a plain JS object) and returns another object, which is the slice of the state that your component is interested in.
 e.g:
 ```JS
 state => state.todos
