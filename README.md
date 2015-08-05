@@ -64,6 +64,9 @@ class TodoLoaderController {
 }
 ```
 
+### Note: The callback provided to ```connect``` will be called once directly after creation to allow initialization of your component states
+
+
 
 You can also create multiple connections in single component:
 
