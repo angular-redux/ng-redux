@@ -3,18 +3,11 @@ import isFunction from '../utils/isFunction';
 import isPlainObject from '../utils/isPlainObject';
 import invariant from 'invariant';
 
-export default function connectorFactory($ngRedux) {
-  let connectors = [];
+export default function connectorFactory($ngRedux) { 
   return {
       connect: (select, target) => {
         let connector = new Connector($ngRedux, select, target);
-        connectors.push(connector);
         return connector.unsubscribe;
-      },
-      disconnectAll: () => {
-        for(let connector of connectors) {
-          connector.unsubscribe()
-        }
       }
     }
 }
@@ -26,6 +19,12 @@ export class Connector {
       isFunction(selector),
       'The selector passed to connect must be a function. Instead received %s.',
       typeof selector
+    );
+
+    invariant(
+      isFunction(callback),
+      'The callback passed to connect must be a function. Instead received %s.',
+      typeof callback
     );
 
     this.select = selector;
@@ -45,12 +44,7 @@ export class Connector {
     }
   }
 
-  updateTarget(target, state){
-    invariant(
-      isFunction(target),
-      'The callback passed to connect must be a function. Instead received %s.',
-      typeof target
-    );
+  updateTarget(target, state){  
     target(state) 
   }
 

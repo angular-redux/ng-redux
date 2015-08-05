@@ -78,15 +78,8 @@ constructor(reduxConnector) {
 
 
 #### Unsubscribing
-There is two way of unsubscribing:
 
-You can simply close all connections created with a particular connector:
-
-```JS
-    reduxConnector.disconnectAll(); 
-```
-
-Or if you need a more fine grained unsubscribing, you can close a specific connection:
+You can close a specific connection like this:
 
 ```JS
 
