@@ -6,7 +6,7 @@ Angular bindings for [Redux](https://github.com/gaearon/redux).
 ## Overview
 
 ngRedux lets you easily connect your angular components with Redux.
-the API is straightforward:
+the API is straightforward: 
 
 ```JS
 reduxConnector.connect(selector, callback);
