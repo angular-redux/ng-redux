@@ -52,7 +52,7 @@ angular.module('app', ['ngRedux'])
     [...]
   };
 }
-
+ 
 class TodoLoaderController {    
 
   constructor(reduxConnector) {
