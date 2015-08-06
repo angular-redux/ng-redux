@@ -114,3 +114,8 @@ redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 ### Example:
 An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuchwalter/tsRedux/blob/master/src/components/regionLister.ts).
 
+
+## Todo:
+- Better unsubscribing
+- Less boilerplate for classic use case
+
