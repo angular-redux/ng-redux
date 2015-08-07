@@ -1,6 +1,8 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
+##Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
+
 ![Travis](https://travis-ci.org/wbuchwalter/ng-redux.svg?branch=master)
 
 ## Overview
