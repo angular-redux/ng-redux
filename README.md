@@ -120,4 +120,6 @@ An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuch
 ## Todo:
 - Better unsubscribing
 - Less boilerplate for classic use case
+- Better API
+- Angular 2
 
