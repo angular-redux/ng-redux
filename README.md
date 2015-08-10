@@ -119,7 +119,7 @@ An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuch
 
 ## Todo:
 - Better unsubscribing
-- Less boilerplate for classic use case
+- Less boilerplate for classic use case (remove connector + multiple connections with a single call to connect())
 - Better API
 - Angular 2
 
