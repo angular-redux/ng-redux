@@ -11,7 +11,9 @@ ngRedux lets you easily connect your angular components with Redux.
 the API is straightforward: 
 
 ```JS
-reduxConnector.connect(selector, callback);
+$ngRedux.connect(selector, callback);
+//OR
+$ngRedux.connect([selector1, selector2, ...], callback);
 ```
 
 Where selector is a function taking for single argument the entire redux Store's state (a plain JS object) and returns another object, which is the slice of the state that your component is interested in.
@@ -24,7 +26,7 @@ Note: if you are not familiar with this syntax, go and check out the [MDN Guide 
 If you haven't, check out [reselect](https://github.com/faassen/reselect), an awesome tool to create and combine selectors.
 
 
-This returned object will be passed as single argument to the callback provided whenever the state changes.
+This returned object will be passed as argument to the callback provided whenever the state changes.
 ngRedux checks for shallow equality of the state's selected slice whenever the Store is updated, and will call the callback only if there is a change.
 
 
@@ -59,9 +61,9 @@ angular.module('app', ['ngRedux'])
 
 class TodoLoaderController {
 
-  constructor(reduxConnector) {
+  constructor($ngRedux) {
     this.todos = [];
-    reduxConnector.connect(state => state.todos, todos => this.todos = todos);
+    $ngRedux.connect(state => state.todos, todos => this.todos = todos);
   }
 
   [...]
@@ -72,33 +74,37 @@ class TodoLoaderController {
 
 
 
-You can also create multiple connections in single component:
+You can also grab multiple slices of the state by passing an array of selectors:
 
 ```JS
 constructor(reduxConnector) {
     this.todos = [];
     this.users = [];
-    reduxConnector.connect(state => state.todos, todos => this.todos = todos);
-    reduxConnector.connect(state => state.users, users => this.users = users);
+    $ngRedux.connect([
+    state => state.todos,
+    state => state.users
+    ],
+    (todos, users) => { 
+        this.todos = todos
+        this.users = users;
+    });
   }
 ```
 
 
 #### Unsubscribing
 
-You can close a specific connection like this:
+You can close a connection like this:
 
 ```JS
 
 constructor(reduxConnector) {
     this.todos = [];
-    this.users = [];
-    this.disconnectTodos = reduxConnector.connect(state => state.todos, todos => this.todos = todos);
-    reduxConnector.connect(state => state.users, users => this.users = users);
+    this.unsubscribe = reduxConnector.connect(state => state.todos, todos => this.todos = todos);
   }
 
-disconnectSome() {
-    this.disconnectTodos();
+destroy() {
+    this.unsubscribe();
 }
 
 ```
@@ -115,11 +121,3 @@ redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 
 ### Example:
 An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuchwalter/tsRedux/blob/master/src/components/regionLister.ts).
-
-
-## Todo:
-- Better unsubscribing
-- Less boilerplate for classic use case (remove connector + multiple connections with a single call to connect())
-- Better API
-- Angular 2
-
