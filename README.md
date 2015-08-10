@@ -40,10 +40,10 @@ require('ng-redux');
 angular.module('app', ['ngRedux'])
 .config(($ngReduxProvider) => {
     let reducer = redux.combineReducers(reducers);
-    let store = redux.createStore(reducer);  
+    let store = redux.createStore(reducer);
     $ngReduxProvider.setReduxStore(store);
   });
-``` 
+```
 
 ### Usage
 ```JS
@@ -52,18 +52,18 @@ angular.module('app', ['ngRedux'])
     controllerAs: 'vm',
     controller: TodoLoaderController,
     template: "<div ng-repeat='todo in vm.todos'>{{todo.text}}</div>",
-    
+
     [...]
   };
 }
- 
-class TodoLoaderController {    
+
+class TodoLoaderController {
 
   constructor(reduxConnector) {
     this.todos = [];
     reduxConnector.connect(state => state.todos, todos => this.todos = todos);
   }
-  
+
   [...]
 }
 ```
@@ -96,7 +96,7 @@ constructor(reduxConnector) {
     this.disconnectTodos = reduxConnector.connect(state => state.todos, todos => this.todos = todos);
     reduxConnector.connect(state => state.users, users => this.users = users);
   }
-  
+
 disconnectSome() {
     this.disconnectTodos();
 }
@@ -108,7 +108,7 @@ disconnectSome() {
 You don't need to create another service to get hold of Redux's store (although you can).
 You can access the store via ```$ngRedux.getStore()```:
 
-```JS 
+```JS
 redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 ```
 

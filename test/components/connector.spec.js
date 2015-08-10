@@ -1,100 +1,79 @@
 import expect from 'expect';
 import {createStore} from 'redux';
-import {Connector, default as connectorFactory} from '../../src/components/connector';
+import {default as Connector, copyArray} from '../../src/components/connector';
 
 describe('Connector', () => {
 	let store;
-	let ngRedux;
+	let connector;
 	beforeEach(() => {
 		store = createStore((state, action) => {
-			return {foo: 'bar', baz: action.payload};
+			return {foo: 'bar', baz: action.payload, anotherState: 12};
 		});
-		ngRedux = {
-			getStore: () => store
-		};
+		connector = Connector(store);
 	});
 
 	it('Should throw when not passed a function as callback', () => {
-		expect(() => new Connector(ngRedux, state => state, {})).toThrow();
-	});
-
-	it('Should throw when not passed a function as selector', () => {
-		expect(() => new Connector(ngRedux, {}, () => {})).toThrow();
+		expect(connector.connect.bind(connector, () => {}, undefined)).toThrow();
+		expect(connector.connect.bind(connector, () => {}, {})).toThrow();
+		expect(connector.connect.bind(connector, () => {}, 15)).toThrow();
 	});
 
 	it('Callback should be called once directly after creation to allow initialization', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		let connector = new Connector(ngRedux, state => state, callback);		
+		connector.connect(state => state, callback);
 		expect(counter).toBe(1);
 	});
 
 	it('Should call the function passed to connect when the store updates', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		let connector = new Connector(ngRedux, state => state, callback);
+		connector.connect(state => state, callback);
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 1});
 		expect(counter).toBe(3);
 	});
 
-	it('Should prevent unnecessary updates when state does not change', () => {
+	it('Should accept a function or an array of function as selector', () => {
+		let receivedState1, receivedState2;
+		connector.connect(state => state.foo, newState => receivedState1 = newState);
+		connector.connect([state => state.foo], newState => receivedState2 = newState);
+		expect(receivedState1).toBe('bar');
+		expect(receivedState1).toBe(receivedState2);
+	})
+
+	 it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		let connector = new Connector(ngRedux, state => state, callback);
+		connector.connect(state => state.baz, callback);
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 0});
-		store.dispatch({type: 'ACTION', payload: 0});
-		expect(counter).toBe(2);
+		store.dispatch({type: 'ACTION', payload: 1});
+		expect(counter).toBe(3);
 	});
 
 	it('Should pass the selected state as argument to the callback', () => {
 		let receivedState;
-		let connector = new Connector(ngRedux, state => state.foo, newState => receivedState = newState);
+		connector.connect(state => state.foo, newState => receivedState = newState);
 		store.dispatch({type: 'ACTION', payload: 1});
 		expect(receivedState).toBe('bar');
 	});
 
-	it('Should unsubscribe when disconnect is called', () => {
-		let counter = 0;
-		let callback = () => counter++;
-		let connector = new Connector(ngRedux, state => state, callback);
-		store.dispatch({type: 'ACTION', payload: 0});
-		connector.unsubscribe();
-		store.dispatch({type: 'ACTION', payload: 2});
-		expect(counter).toBe(2);
-	});
-
-	it('Factory: connect should create a new Connector', () => {
-		let api = connectorFactory(ngRedux);
-		let counter = 0;
-		let callback = () => counter++;
-		api.connect(state => state, callback);
-		store.dispatch({type: 'ACTION', payload: 0});
+	it('Should pass all the selected state as argument to the callback when provided an array of selectors', () => {
+		connector.connect([state => state.foo, state => state.anotherState],
+		 (foo, anotherState) => {
+		 	expect(foo).toBe('bar');
+		 	expect(anotherState).toBe(12);
+		 });
 		store.dispatch({type: 'ACTION', payload: 1});
-		store.dispatch({type: 'ACTION', payload: 2});
-		expect(counter).toBe(4);
 	});
 
-	it('Factory: should allow multiple Connector creation', () => {
-		let api = connectorFactory(ngRedux);
+	it('Should return an unsubscribing function', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		api.connect(state => state, callback);
-		api.connect(state => state, callback);
-		store.dispatch({type: 'ACTION', payload: 0});
-		// 2 initialization + each connection responding once to the action  = 4
-		expect(counter).toBe(4);
-	})
-
-	it('Factory: connect should return an unsubscribing function', () => {
-		let api = connectorFactory(ngRedux);
-		let counter = 0;
-		let callback = () => counter++;
-		let unsubscribe = api.connect(state => state, callback);
+		let unsubscribe = connector.connect(state => state, callback);
 		store.dispatch({type: 'ACTION', payload: 0});
 		unsubscribe();
-		store.dispatch({type: 'ACTION', payload: 1});
 		store.dispatch({type: 'ACTION', payload: 2});
 		expect(counter).toBe(2);
 	});
