@@ -4,7 +4,7 @@ import invariant from 'invariant';
 
 export default function Connector(store) {
 	return {
-      connect: (selectors, callback, disableCaching) => {
+      connect: (selectors, callback, disableCaching = false) => {
         if (!Array.isArray(selectors)) {
           selectors = [selectors];
         }
