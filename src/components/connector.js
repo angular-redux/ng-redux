@@ -1,9 +1,10 @@
 import isFunction from '../utils/isFunction';
+import shallowEqual from '../utils/shallowEqual';
 import invariant from 'invariant';
 
-export default function Connector(store){
+export default function Connector(store) {
 	return {
-      connect: (selectors, callback) => {
+      connect: (selectors, callback, disableCaching) => {
         if (!Array.isArray(selectors)) {
           selectors = [selectors];
         }
@@ -20,9 +21,9 @@ export default function Connector(store){
 
         let unsubscribe = store.subscribe(() => {
           let nextParams = selectors.map(selector => selector(store.getState()));
-          if(params === null || params.some((param, index) => param !== nextParams[index])) {
+          if(disableCaching || !shallowEqual(params, nextParams)) {
            callback(...nextParams);
-           params = nextParams.slice(0);
+           params = nextParams;
          }
        });
 

@@ -52,6 +52,16 @@ describe('Connector', () => {
 		expect(counter).toBe(3);
 	});
 
+	 it('Should disable caching when disableCaching is set to true', () => {
+		let counter = 0;
+		let callback = () => counter++;
+		connector.connect(state => state.baz, callback, true);
+		store.dispatch({type: 'ACTION', payload: 0});
+		store.dispatch({type: 'ACTION', payload: 0});
+		store.dispatch({type: 'ACTION', payload: 1});
+		expect(counter).toBe(4);
+	});
+
 	it('Should pass the selected state as argument to the callback', () => {
 		let receivedState;
 		connector.connect(state => state.foo, newState => receivedState = newState);
