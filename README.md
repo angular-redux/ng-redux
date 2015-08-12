@@ -1,7 +1,7 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
-##Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
+#####Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
 
 ![Travis](https://travis-ci.org/wbuchwalter/ng-redux.svg?branch=master)
 
@@ -11,9 +11,9 @@ ngRedux lets you easily connect your angular components with Redux.
 the API is straightforward: 
 
 ```JS
-$ngRedux.connect(selector, callback);
+$ngRedux.connect(selector, callback, disableCaching = false);
 //OR
-$ngRedux.connect([selector1, selector2, ...], callback);
+$ngRedux.connect([selector1, selector2, ...], callback, disableCaching = false);
 ```
 
 Where selector is a function taking for single argument the entire redux Store's state (a plain JS object) and returns another object, which is the slice of the state that your component is interested in.
@@ -28,6 +28,9 @@ If you haven't, check out [reselect](https://github.com/faassen/reselect), an aw
 
 This returned object will be passed as argument to the callback provided whenever the state changes.
 ngRedux checks for shallow equality of the state's selected slice whenever the Store is updated, and will call the callback only if there is a change.
+##### Important: It is assumed that you never mutate your states, if you do mutate them, ng-redux will not execute the callback properly.
+See [Redux's doc](http://gaearon.github.io/redux/docs/basics/Reducers.html) to understand why you should not mutate your states.
+If you have a good reason to mutate your states, you can still [disable caching](#Disable-caching) altogether.
 
 
 ## Getting Started
@@ -47,7 +50,7 @@ angular.module('app', ['ngRedux'])
   });
 ```
 
-### Usage
+#### Usage
 ```JS
  export default function todoLoader() {
   return {
@@ -70,7 +73,7 @@ class TodoLoaderController {
 }
 ```
 
-### Note: The callback provided to ```connect``` will be called once directly after creation to allow initialization of your component states
+##### Note: The callback provided to ```connect``` will be called once directly after creation to allow initialization of your component states
 
 
 
@@ -110,12 +113,20 @@ destroy() {
 ```
 
 
-### Accessing Redux' Store
+#### Accessing Redux' Store
 You don't need to create another service to get hold of Redux's store (although you can).
 You can access the store via ```$ngRedux.getStore()```:
 
 ```JS
 redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
+```
+
+#### Disabling caching
+Each time Redux's Store update, ng-redux will check if the slices specified via 'selectors' have changed, and if so will execute the provided callback.
+You can disable this behaviour, and force the callback to be executed even if the slices didn't change by setting ```disableCaching``` to true:
+
+```JS
+reduxConnector.connect(state => state.todos, todos => this.todos = todos, true);
 ```
 
 
