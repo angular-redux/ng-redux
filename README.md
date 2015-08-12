@@ -1,10 +1,14 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
+##Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
+
+![Travis](https://travis-ci.org/wbuchwalter/ng-redux.svg?branch=master)
+
 ## Overview
 
 ngRedux lets you easily connect your angular components with Redux.
-the API is straightforward:
+the API is straightforward: 
 
 ```JS
 reduxConnector.connect(selector, callback);
@@ -111,4 +115,9 @@ redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
 
 ### Example:
 An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuchwalter/tsRedux/blob/master/src/components/regionLister.ts).
+
+
+## Todo:
+- Better unsubscribing
+- Less boilerplate for classic use case
 
