@@ -2,8 +2,7 @@ import isFunction from '../utils/isFunction';
 import shallowEqual from '../utils/shallowEqual';
 import invariant from 'invariant';
 
-export default function Connector() {
-  let store;
+export default function Connector(store) {
   return {
     connect: (selectors, callback, disableCaching = false) => {
       if (!Array.isArray(selectors)) {
@@ -32,9 +31,6 @@ export default function Connector() {
     },
     getStore() {
       return store;
-    },
-    setStore(reduxStore) {
-      store = reduxStore;
     }
   }
 }
