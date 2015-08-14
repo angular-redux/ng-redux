@@ -1,6 +1,8 @@
 # ng-redux
 Angular bindings for [Redux](https://github.com/gaearon/redux).
 
+####### For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
+
 #####Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
 
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
