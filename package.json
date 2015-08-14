@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/wbuchwalter/ng-redux/issues"
   },
-  "homepage": "https://github.com/wbuchwalter/ng-redux",
+  "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
   "devDependencies": {
     "babel": "^5.8.12",
     "babel-loader": "^5.3.2",
