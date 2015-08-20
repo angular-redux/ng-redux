@@ -12,13 +12,13 @@ export default function ngReduxProvider() {
   	  invariant(
         isFunction(reducer),
         'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
-        typeof selector
+        typeof reducer
       );
 
       invariant(
         !storeEnhancer || isFunction(storeEnhancer),
         'The storeEnhancer parameter passed to createStoreWith must be a Function. Instead received %s.',
-        typeof selector
+        typeof storeEnhancer
       );
 
       _reducer = reducer;
