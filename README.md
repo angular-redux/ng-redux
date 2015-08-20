@@ -40,8 +40,6 @@ If you have a good reason to mutate your states, you can still [disable caching]
 
 #### Initialization
 
-$ngReduxProvider.createStoreWith(reducer, ['promiseMiddleware', loggingMiddleware]);
-
 ```JS
 $ngReduxProvider.createStoreWith(reducer, [middlewares], storeEnhancer);
 ```
