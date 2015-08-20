@@ -29,7 +29,7 @@ export default function ngReduxProvider() {
   this.$get = ($injector) => {
   	let resolvedMiddleware = [];
   	for(let middleware of _middlewares) {
-  		if(_.isString(middleware)) {
+  		if(typeof middleware === 'string') {
   			resolvedMiddleware.push($injector.get(middleware));
   		} else {
   			resolvedMiddleware.push(middleware);
