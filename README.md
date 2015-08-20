@@ -46,9 +46,9 @@ $ngReduxProvider.createStoreWith(reducer, ['promiseMiddleware', loggingMiddlewar
 $ngReduxProvider.createStoreWith(reducer, [middlewares], storeEnhancer);
 ```
 #### Parameters: 
-*reducer (Function): A single reducer composed of all other reducers (create with redux.combineReducer)
-*[middleware] (Array of Function or String): An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
-*storeEnhancer: Optional function that will be used to create the store, in most cases you don't need that, see [Store Enhancer official doc](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
+* reducer (Function): A single reducer composed of all other reducers (create with redux.combineReducer)
+* [middleware] (Array of Function or String): An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
+* storeEnhancer: Optional function that will be used to create the store, in most cases you don't need that, see [Store Enhancer official doc](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 ```JS
 import reducers from './reducers';
