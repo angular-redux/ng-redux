@@ -12,7 +12,7 @@ export default function Connector(store) {
       invariant(
         isFunction(callback),
         'The callback parameter passed to connect must be a Function. Instead received %s.',
-        typeof selector
+        typeof callback
       );
 
       //Initial update
