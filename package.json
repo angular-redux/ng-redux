@@ -1,6 +1,6 @@
 {
   "name": "ng-redux",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
@@ -25,9 +25,11 @@
     "webpack": "^1.10.5"
   },
   "peerDependencies": {
-    "redux": "^1.0.0 || 1.0.0-alpha || 1.0.0-rc"
+    "redux": "^1.0.0"
   },
   "dependencies": {
-    "invariant": "^2.1.0"
+    "invariant": "^2.1.0",
+    "lodash": "^3.10.1",
+    "redux": "^1.0.1"
   }
 }
