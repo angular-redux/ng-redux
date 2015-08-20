@@ -3,7 +3,7 @@
 
 For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
-#####Warning: The API is unstable and subject to breaking changes until Redux@1.0.0 is released.
+#####Warning: The API is unstable and subject to breaking changes.
 
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
@@ -39,17 +39,27 @@ If you have a good reason to mutate your states, you can still [disable caching]
 ## Getting Started
 
 #### Initialization
-You need to pass Redux Store to ng-redux via ```$ngReduxProvider``` :
+
+$ngReduxProvider.createStoreWith(reducer, ['promiseMiddleware', loggingMiddleware]);
+
+```JS
+$ngReduxProvider.createStoreWith(reducer, [middlewares], storeEnhancer);
+```
+#### Parameters: 
+*reducer (Function): A single reducer composed of all other reducers (create with redux.combineReducer)
+*[middleware] (Array of Function or String): An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
+*storeEnhancer: Optional function that will be used to create the store, in most cases you don't need that, see [Store Enhancer official doc](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 ```JS
 import reducers from './reducers';
-require('ng-redux');
+import {combineReducers} from 'redux';
+import loggingMiddleware from './loggingMiddleware';
+import 'ng-redux';
 
 angular.module('app', ['ngRedux'])
 .config(($ngReduxProvider) => {
-    let reducer = redux.combineReducers(reducers);
-    let store = redux.createStore(reducer);
-    $ngReduxProvider.setReduxStore(store);
+    let reducer = combineReducers(reducers);
+    $ngReduxProvider.createStoreWith(reducer, ['promiseMiddleware', loggingMiddleware]);
   });
 ```
 
