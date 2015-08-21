@@ -15,14 +15,12 @@ the API is straightforward:
 
 ```JS
 $ngRedux.connect(selector, callback, disableCaching = false);
-//OR
-$ngRedux.connect([selector1, selector2, ...], callback, disableCaching = false);
 ```
 
-Where '''selector''' is a function taking for single argument the entire redux Store's state (a plain JS object) and returns another object, which is the slice of the state that your component is interested in.
+Where `selector` is a function that takes Redux's entire store state as argument and returns an object that contains the slices of store state that your component is interested in.
 e.g:
 ```JS
-state => state.todos
+state => ({todos: state.todos})
 ```
 Note: if you are not familiar with this syntax, go and check out the [MDN Guide on fat arrow  functions (ES2015)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 
@@ -77,7 +75,7 @@ class TodoLoaderController {
 
   constructor($ngRedux) {
     this.todos = [];
-    $ngRedux.connect(state => state.todos, todos => this.todos = todos);
+    $ngRedux.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos);
   }
 
   [...]
@@ -94,11 +92,11 @@ You can also grab multiple slices of the state by passing an array of selectors:
 constructor(reduxConnector) {
     this.todos = [];
     this.users = [];
-    $ngRedux.connect([
-    state => state.todos,
-    state => state.users
-    ],
-    (todos, users) => { 
+    $ngRedux.connect(state => ({
+        todos: state.todos,
+        users: state.users
+    }),
+    ({todos, users}) => { 
         this.todos = todos
         this.users = users;
     });
@@ -114,7 +112,7 @@ You can close a connection like this:
 
 constructor(reduxConnector) {
     this.todos = [];
-    this.unsubscribe = reduxConnector.connect(state => state.todos, todos => this.todos = todos);
+    this.unsubscribe = reduxConnector.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos);
   }
 
 destroy() {
@@ -137,7 +135,7 @@ Each time Redux's Store update, ng-redux will check if the slices specified via 
 You can disable this behaviour, and force the callback to be executed even if the slices didn't change by setting ```disableCaching``` to true:
 
 ```JS
-reduxConnector.connect(state => state.todos, todos => this.todos = todos, true);
+reduxConnector.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos, true);
 ```
 
 

@@ -1,6 +1,6 @@
 import expect from 'expect';
 import {createStore} from 'redux';
-import {default as Connector, copyArray} from '../../src/components/connector';
+import Connector from '../../src/components/connector';
 
 describe('Connector', () => {
 	let store;
@@ -25,7 +25,7 @@ describe('Connector', () => {
 		expect(counter).toBe(1);
 	});
 
-	it('Should call the function passed to connect when the store updates', () => {
+	it('Should call the callback passed to connect when the store updates', () => {
 		let counter = 0;
 		let callback = () => counter++;
 		connector.connect(state => state, callback);
@@ -34,18 +34,10 @@ describe('Connector', () => {
 		expect(counter).toBe(3);
 	});
 
-	it('Should accept a function or an array of function as selector', () => {
-		let receivedState1, receivedState2;
-		connector.connect(state => state.foo, newState => receivedState1 = newState);
-		connector.connect([state => state.foo], newState => receivedState2 = newState);
-		expect(receivedState1).toBe('bar');
-		expect(receivedState1).toBe(receivedState2);
-	})
-
 	 it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		connector.connect(state => state.baz, callback);
+		connector.connect(state => ({baz: state.baz}), callback);
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 1});
@@ -55,7 +47,7 @@ describe('Connector', () => {
 	 it('Should disable caching when disableCaching is set to true', () => {
 		let counter = 0;
 		let callback = () => counter++;
-		connector.connect(state => state.baz, callback, true);
+		connector.connect(state => ({baz: state.baz}), callback, true);
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 0});
 		store.dispatch({type: 'ACTION', payload: 1});
@@ -64,18 +56,20 @@ describe('Connector', () => {
 
 	it('Should pass the selected state as argument to the callback', () => {
 		let receivedState;
-		connector.connect(state => state.foo, newState => receivedState = newState);
-		store.dispatch({type: 'ACTION', payload: 1});
-		expect(receivedState).toBe('bar');
+		connector.connect(state => ({
+      myFoo: state.foo
+    }), newState => receivedState = newState);
+		expect(receivedState).toEqual({myFoo: 'bar'});
 	});
 
-	it('Should pass all the selected state as argument to the callback when provided an array of selectors', () => {
-		connector.connect([state => state.foo, state => state.anotherState],
-		 (foo, anotherState) => {
+	it('Should allow multiple store slices to be selected', () => {
+		connector.connect(state => ({
+			foo: state.foo,
+			anotherState: state.anotherState
+    }), ({foo, anotherState}) => {
 		 	expect(foo).toBe('bar');
 		 	expect(anotherState).toBe(12);
-		 });
-		store.dispatch({type: 'ACTION', payload: 1});
+		});
 	});
 
 	it('Should return an unsubscribing function', () => {
