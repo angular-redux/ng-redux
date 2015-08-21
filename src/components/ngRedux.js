@@ -27,7 +27,8 @@ export default function ngReduxProvider() {
   };
 
   this.$get = ($injector) => {
-  	let resolvedMiddleware = [];
+  	let store, resolvedMiddleware = [];
+
   	for(let middleware of _middlewares) {
   		if(typeof middleware === 'string') {
   			resolvedMiddleware.push($injector.get(middleware));
@@ -36,6 +37,11 @@ export default function ngReduxProvider() {
   		}
   	}
 
-  	return Connector(applyMiddleware(...resolvedMiddleware)(_storeEnhancer)(_reducer));
+    store = applyMiddleware(...resolvedMiddleware)(_storeEnhancer)(_reducer);
+
+  	return {
+      ...store,
+      connector: Connector(store)
+    };
   }
 }
