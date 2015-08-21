@@ -4,11 +4,7 @@ import invariant from 'invariant';
 
 export default function Connector(store) {
   return {
-    connect: (selectors, callback, disableCaching = false) => {
-      if (!Array.isArray(selectors)) {
-        selectors = [selectors];
-      }
-
+    connect: (selector, callback, disableCaching = false) => {
       invariant(
         isFunction(callback),
         'The callback parameter passed to connect must be a Function. Instead received %s.',
@@ -16,13 +12,13 @@ export default function Connector(store) {
       );
 
       //Initial update
-      let params = selectors.map(selector => selector(store.getState()));
-      callback(...params);
+      let params = selector(store.getState());
+      callback(params);
 
       let unsubscribe = store.subscribe(() => {
-        let nextParams = selectors.map(selector => selector(store.getState()));
+        let nextParams = selector(store.getState());
         if (disableCaching || !shallowEqual(params, nextParams)) {
-          callback(...nextParams);
+          callback(nextParams);
           params = nextParams;
         }
       });
