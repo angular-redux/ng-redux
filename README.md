@@ -8,6 +8,11 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
 
+## Installation
+```js
+npm install --save ng-redux
+```
+
 ## Overview
 
 ngRedux lets you easily connect your angular components with Redux.
