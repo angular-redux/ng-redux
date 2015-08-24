@@ -3,7 +3,7 @@
 
 For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
-#####Warning: The API is unstable and subject to breaking changes.
+**Warning: The API is unstable and subject to breaking changes.**
 
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
@@ -19,7 +19,7 @@ ngRedux lets you easily connect your angular components with Redux.
 the API is straightforward: 
 
 ```JS
-$ngRedux.connect(selector, callback, disableCaching = false);
+$ngRedux.connect(selector, callback);
 ```
 
 Where `selector` is a function that takes Redux's entire store state as argument and returns an object that contains the slices of store state that your component is interested in.
@@ -34,9 +34,8 @@ If you haven't, check out [reselect](https://github.com/faassen/reselect), an aw
 
 This returned object will be passed as argument to the callback provided whenever the state changes.
 ngRedux checks for shallow equality of the state's selected slice whenever the Store is updated, and will call the callback only if there is a change.
-##### Important: It is assumed that you never mutate your states, if you do mutate them, ng-redux will not execute the callback properly.
+**Important: It is assumed that you never mutate your states, if you do mutate them, ng-redux will not execute the callback properly.**
 See [Redux's doc](http://gaearon.github.io/redux/docs/basics/Reducers.html) to understand why you should not mutate your states.
-If you have a good reason to mutate your states, you can still [disable caching](#Disable-caching) altogether.
 
 
 ## Getting Started
@@ -87,14 +86,14 @@ class TodoLoaderController {
 }
 ```
 
-##### Note: The callback provided to ```connect``` will be called once directly after creation to allow initialization of your component states
+**Note: The callback provided to `connect` will be called once directly after creation to allow initialization of your component states**
 
 
 
 You can also grab multiple slices of the state by passing an array of selectors:
 
 ```JS
-constructor(reduxConnector) {
+constructor($ngRedux) {
     this.todos = [];
     this.users = [];
     $ngRedux.connect(state => ({
@@ -115,9 +114,9 @@ You can close a connection like this:
 
 ```JS
 
-constructor(reduxConnector) {
+constructor($ngRedux) {
     this.todos = [];
-    this.unsubscribe = reduxConnector.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos);
+    this.unsubscribe = $ngRedux.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos);
   }
 
 destroy() {
@@ -127,22 +126,13 @@ destroy() {
 ```
 
 
-#### Accessing Redux' Store
-You don't need to create another service to get hold of Redux's store (although you can).
-You can access the store via ```$ngRedux.getStore()```:
+#### Accessing Redux's store methods
+All of redux's store methods (i.e. `dispatch`, `subscribe` and `getState`) are exposed by $ngRedux and can be accessed directly. For example:
 
 ```JS
-redux.bindActionCreators(actionCreator, $ngRedux.getStore().dispatch);
+redux.bindActionCreators(actionCreator, $ngRedux.dispatch);
 ```
-
-#### Disabling caching
-Each time Redux's Store update, ng-redux will check if the slices specified via 'selectors' have changed, and if so will execute the provided callback.
-You can disable this behaviour, and force the callback to be executed even if the slices didn't change by setting ```disableCaching``` to true:
-
-```JS
-reduxConnector.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos, true);
-```
-
+**Note:** If you choose to use `subscribe` directly, be sure to [unsubscribe](#unsubscribing) when your current scope is $destroyed.
 
 ### Example:
 An example can be found here (in TypeScript): [tsRedux](https://github.com/wbuchwalter/tsRedux/blob/master/src/components/regionLister.ts).
