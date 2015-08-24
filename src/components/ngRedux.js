@@ -44,4 +44,6 @@ export default function ngReduxProvider() {
       connector: Connector(store)
     };
   }
+
+  this.$get.$inject = ['$injector'];
 }
