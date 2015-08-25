@@ -7,14 +7,14 @@ export default function Connector(store) {
   return (selector, target) => {
 
     //Initial update
-    let params = getStateSlice(store.getState(), selector);
-    target = angular.merge(target, params);
+    let slice = getStateSlice(store.getState(), selector);
+    target = angular.merge(target, slice);
 
     let unsubscribe = store.subscribe(() => {
-      let nextParams = getStateSlice(store.getState(), selector);
-      if (!shallowEqual(params, nextParams)) {
-        target = angular.merge(target, nextParams);
-        params = nextParams;
+      let nextSlice = getStateSlice(store.getState(), selector);
+      if (!shallowEqual(slice, nextSlice)) {
+        target = angular.merge(target, nextSlice);
+        slice = nextSlice;
       }
     });
 
