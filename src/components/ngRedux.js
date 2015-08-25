@@ -41,7 +41,7 @@ export default function ngReduxProvider() {
 
   	return {
       ...store,
-      connector: Connector(store)
+      connect: Connector(store)
     };
   }
 
