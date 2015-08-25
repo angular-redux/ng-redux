@@ -14,15 +14,13 @@ export default function counter() {
 class CounterController {
 
   constructor($ngRedux) {
-    this.counter = 0;
-    $ngRedux.connect(state => ({
-      counter: state.counter
-    }),
-    ({counter}) => this.counter = counter);
+    $ngRedux.connect(state => ({counter: state.counter}), this);
 
-    let {increment, decrement, incrementIfOdd} = bindActionCreators(CounterActions, $ngRedux.dispatch);
+    let {increment, decrement, incrementIfOdd, incrementAsync} = bindActionCreators(CounterActions, $ngRedux.dispatch);
     this.increment = increment;
     this.decrement = decrement;
     this.incrementIfOdd = incrementIfOdd;
+    this.incrementAsync = incrementAsync;
   }
+
 }
