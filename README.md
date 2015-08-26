@@ -3,7 +3,7 @@
 
 For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
-**Warning: The API is unstable and subject to breaking changes.**
+**Warning: The API is unstable and subject to breaking changes untile `1.0.0` is released.**
 
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
