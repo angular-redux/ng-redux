@@ -23,6 +23,11 @@ describe('Connector', () => {
 		expect(connect.bind(connect, () => ({}), {})).toNotThrow();
 	});
 
+	it('Should throw when selector does not return a plain object as target', () => {
+		expect(connect.bind(connect, state => state.foo, {})).toThrow();
+	});
+
+
 	it('target should be extended with state once directly after creation', () => {
 		let target = {};
 		connect(() => ({test: 1}), target);
