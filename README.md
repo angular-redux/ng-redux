@@ -48,8 +48,7 @@ angular.module('app', ['ngRedux'])
 class TodoLoaderController {
 
   constructor($ngRedux) {
-    this.todos = [];
-    $ngRedux.connect(state => ({todos: state.todos}), ({todos}) => this.todos = todos);
+    $ngRedux.connect(state => ({todos: state.todos}), this);
   }
 
   [...]
