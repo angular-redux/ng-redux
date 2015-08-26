@@ -1,8 +1,8 @@
 import Connector from './connector';
 import invariant from 'invariant';
-import isFunction from '../utils/isFunction';
 import {createStore, applyMiddleware, compose} from 'redux';
 import digestMiddleware from './digestMiddleware';
+import _ from 'lodash';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
@@ -11,13 +11,13 @@ export default function ngReduxProvider() {
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers) => {
   	  invariant(
-        isFunction(reducer),
+         _.isFunction(reducer),
         'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
         typeof reducer
       );
 
       invariant(
-        !storeEnhancers || Array.isArray(storeEnhancers),
+        !storeEnhancers || _.isArray(storeEnhancers),
         'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.',
         typeof storeEnhancers
       );

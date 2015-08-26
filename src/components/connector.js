@@ -1,44 +1,34 @@
-import isFunction from '../utils/isFunction';
-import isPlainObject from '../utils/isPlainObject';
 import shallowEqual from '../utils/shallowEqual';
 import invariant from 'invariant';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export default function Connector(store, $injector) {
-  return (selector, target) => {
+  return (selector, scope) => {
 
-    invariant(
-      isPlainObject(target),
-      'The target parameter passed to connect must be a plain object. Instead received %s.',
-      typeof target
-    );
+    invariant(scope && _.isFunction(scope.$on) &&  _.isFunction(scope.$destroy), 'The scope parameter passed to connect must be an instance of $scope.');
 
     //Initial update
     let slice = getStateSlice(store.getState(), selector);
-    target = _.assign(target, slice);
+    _.assign(scope, slice);
 
     let unsubscribe = store.subscribe(() => {
       let nextSlice = getStateSlice(store.getState(), selector);
       if (!shallowEqual(slice, nextSlice)) {
-        target = _.assign(target, nextSlice);
         slice = nextSlice;
+        _.assign(scope, slice);
       }
     });
 
-    if(isFunction(target.$destroy)) {
-      target.$on('$destroy', () => {
-        unsubscribe();
-      });
-    }
-
-    return unsubscribe;
+    scope.$on('$destroy', () => {
+      unsubscribe();
+    });
   }
 }
 
 function getStateSlice(state, selector) {
   let slice = selector(state);
   invariant(
-    isPlainObject(slice),
+    _.isPlainObject(slice),
     '`selector` must return an object. Instead received %s.',
     slice
   );
