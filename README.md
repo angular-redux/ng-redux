@@ -11,12 +11,19 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 *ngRedux lets you easily connect your angular components with Redux.*
 
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [API](#api)
+
 ## Installation
 ```js
 npm install --save ng-redux
 ```
 
-## Overview
+## Quick Start
 
 #### Initialization
 
@@ -76,3 +83,10 @@ Connects an Angular component to Redux.
 #### Remarks
 If `$scope` is passed to `connect` as `target`, ngRedux will listen to the `$destroy` event and unsubscribe the change listener when it is triggered, you don't need to keep track of your subscribtions in this case.
 If anything else than `$scope` is passed as target, the responsability to unsubscribe correctly is deferred to the user.
+
+## Store API
+All of redux's store methods (i.e. `dispatch`, `subscribe` and `getState`) are exposed by $ngRedux and can be accessed directly. For example:
+
+```JS
+redux.bindActionCreators(actionCreator, $ngRedux.dispatch);
+```
