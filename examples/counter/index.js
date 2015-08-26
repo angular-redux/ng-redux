@@ -6,7 +6,6 @@ import counter from './components/counter';
 import { devTools, persistState } from 'redux-devtools';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 import React, { Component } from 'react';
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 
 angular.module('counter', ['ngRedux'])
   .config(($ngReduxProvider) => {
