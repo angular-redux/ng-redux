@@ -1,77 +1,92 @@
 import expect from 'expect';
-import {createStore} from 'redux';
+import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
+import _ from 'lodash';
 
 describe('Connector', () => {
-	let store;
-	let connect;
+  let store;
+  let connect;
+  let scopeStub;
 
-	beforeEach(() => {
-		store = createStore((state, action) => ({
+  beforeEach(() => {
+    store = createStore((state, action) => ({
       foo: 'bar',
-      baz: action.payload,
-      anotherState: 12
-		}));
-		connect = Connector(store);
+      baz: action.payload
+    }));
+    scopeStub = {
+      $on: () => { },
+      $destroy: () => { }
+    };
+    connect = Connector(store);
+  });
+
+	it('Should throw when not passed a $scope object', () => {
+	  expect(connect.bind(connect, () => { }, () => ({}))).toThrow();
+	  expect(connect.bind(connect, 15, () => ({}))).toThrow();
+	  expect(connect.bind(connect, undefined, () => ({}))).toThrow();
+	  expect(connect.bind(connect, {}, () => ({}))).toThrow();
+
+	  expect(connect.bind(connect, scopeStub, () => ({}))).toNotThrow();
 	});
 
-	it('Should throw when not passed a function as callback', () => {
-		expect(connect.bind(connect, () => {}, undefined)).toThrow();
-		expect(connect.bind(connect, () => {}, {})).toThrow();
-		expect(connect.bind(connect, () => {}, 15)).toThrow();
-	});
+  it('Should throw when selector does not return a plain object as target', () => {
+    expect(connect.bind(connect, scopeStub, state => state.foo)).toThrow();
+  });
 
-	it('Callback should be called once directly after creation to allow initialization', () => {
-		let counter = 0;
-		let callback = () => counter++;
-		connect(state => state, callback);
-		expect(counter).toBe(1);
-	});
+  it('Should extend scope with selected state once directly after creation', () => {
+    connect(
+      scopeStub,
+      () => ({
+        vm: { test: 1 }
+      }));
 
-	it('Should call the callback passed to connect when the store updates', () => {
-		let counter = 0;
-		let callback = () => counter++;
-		connect(state => state, callback);
-		store.dispatch({type: 'ACTION', payload: 0});
-		store.dispatch({type: 'ACTION', payload: 1});
-		expect(counter).toBe(3);
-	});
+    expect(scopeStub.vm).toEqual({ test: 1 });
+  });
 
-	 it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
-		let counter = 0;
-		let callback = () => counter++;
-		connect(state => ({baz: state.baz}), callback);
-		store.dispatch({type: 'ACTION', payload: 0});
-		store.dispatch({type: 'ACTION', payload: 0});
-		store.dispatch({type: 'ACTION', payload: 1});
-		expect(counter).toBe(3);
-	});
+  it('Should extend scope[propertyKey] if propertyKey is passed', () => {
+    connect(
+      scopeStub,
+      () => ({ test: 1 }),
+      () => { },
+      'vm'
+      );
 
-	it('Should pass the selected state as argument to the callback', () => {
-		connect(state => ({
-      myFoo: state.foo
-    }), newState => {
-      expect(newState).toEqual({myFoo: 'bar'});
-    });
-	});
+    expect(scopeStub.vm).toEqual({ test: 1 });
+  });
 
-	it('Should allow multiple store slices to be selected', () => {
-		connect(state => ({
-			foo: state.foo,
-			anotherState: state.anotherState
-    }), ({foo, anotherState}) => {
-		 	expect(foo).toBe('bar');
-		 	expect(anotherState).toBe(12);
-		});
-	});
+  it('Should update the scope passed to connect when the store updates', () => {
+    connect(scopeStub, state => state);
+    store.dispatch({ type: 'ACTION', payload: 0 });
+    expect(scopeStub.baz).toBe(0);
+    store.dispatch({ type: 'ACTION', payload: 1 });
+    expect(scopeStub.baz).toBe(1);
+  });
 
-	it('Should return an unsubscribing function', () => {
-		let counter = 0;
-		let callback = () => counter++;
-		let unsubscribe = connect(state => state, callback);
-		store.dispatch({type: 'ACTION', payload: 0});
-		unsubscribe();
-		store.dispatch({type: 'ACTION', payload: 2});
-		expect(counter).toBe(2);
-	});
+  it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
+    connect(scopeStub, state => state);
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(scopeStub.baz).toBe(5);
+
+    scopeStub.baz = 0;
+
+    //this should not replace our mutation, since the state didn't change 
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(scopeStub.baz).toBe(0);
+
+  });
+
+  it('Should extend scope with actionCreators', () => {
+    connect(scopeStub, () => ({}), { ac1: () => { }, ac2: () => { } });
+    expect(_.isFunction(scopeStub.ac1)).toBe(true);
+    expect(_.isFunction(scopeStub.ac2)).toBe(true);
+  });
+
+  it('Should provide dispatch to mapDispatchToScope when receiving a Function', () => {
+    let receivedDispatch;
+    connect(scopeStub, () => ({}), dispatch => { receivedDispatch = dispatch });
+    expect(receivedDispatch).toBe(store.dispatch);
+  });
+
 });

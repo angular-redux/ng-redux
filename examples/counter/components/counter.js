@@ -13,16 +13,14 @@ export default function counter() {
 
 class CounterController {
 
-  constructor($ngRedux) {
-    this.counter = 0;
-    $ngRedux.connect(state => ({
-      counter: state.counter
-    }),
-    ({counter}) => this.counter = counter);
+  constructor($ngRedux, $scope) {
+    $ngRedux.connect($scope, this.mapStateToScope, CounterActions, 'vm');
+  }
 
-    let {increment, decrement, incrementIfOdd} = bindActionCreators(CounterActions, $ngRedux.dispatch);
-    this.increment = increment;
-    this.decrement = decrement;
-    this.incrementIfOdd = incrementIfOdd;
+  // Which part of the Redux global state does our component want to receive on $scope?
+  mapStateToScope(state) {
+    return {
+      counter: state.counter
+    };
   }
 }

@@ -5,7 +5,9 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: [
     'webpack/hot/dev-server',
-    './index.js'
+    './index.js',
+    //Remove the following line to remove devTools
+    './devTools.js'
   ],
   output: {
     path: path.join(__dirname, 'dist'),

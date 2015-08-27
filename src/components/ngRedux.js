@@ -1,28 +1,29 @@
 import Connector from './connector';
 import invariant from 'invariant';
-import isFunction from '../utils/isFunction';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
+import digestMiddleware from './digestMiddleware';
+import _ from 'lodash';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
   let _middlewares = [];
-  let _storeEnhancer = undefined;
+  let _storeEnhancers = undefined;
 
-  this.createStoreWith = (reducer, middlewares, storeEnhancer) => {
+  this.createStoreWith = (reducer, middlewares, storeEnhancers) => {
   	  invariant(
-        isFunction(reducer),
+         _.isFunction(reducer),
         'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
         typeof reducer
       );
 
       invariant(
-        !storeEnhancer || isFunction(storeEnhancer),
-        'The storeEnhancer parameter passed to createStoreWith must be a Function. Instead received %s.',
-        typeof storeEnhancer
+        !storeEnhancers || _.isArray(storeEnhancers),
+        'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.',
+        typeof storeEnhancers
       );
 
       _reducer = reducer;
-      _storeEnhancer = storeEnhancer || createStore;
+      _storeEnhancers = storeEnhancers
       _middlewares = middlewares;
   };
 
@@ -37,7 +38,12 @@ export default function ngReduxProvider() {
   		}
   	}
 
-    store = applyMiddleware(...resolvedMiddleware)(_storeEnhancer)(_reducer);
+    let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers, createStore) : createStore;
+
+    //digestMiddleware needs to be the last one.
+    resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
+
+    store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
   	return {
       ...store,
