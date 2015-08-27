@@ -1,6 +1,6 @@
 {
   "name": "ng-redux",
-  "version": "1.0.0-rc.2.2",
+  "version": "1.0.0-rc.2",
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
