@@ -3,8 +3,6 @@
 
 For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
-**Warning: The API will be subject to breaking changes until `1.0.0` is released.**
-
 [![build status](https://img.shields.io/travis/wbuchwalter/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/wbuchwalter/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
 
@@ -21,7 +19,6 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 ## Installation
 
-**The current npm version is outdated, and will be updated once 1.0.0 is finished**
 ```js
 npm install --save ng-redux
 ```
@@ -44,7 +41,6 @@ angular.module('app', ['ngRedux'])
 ```
 
 #### Usage
-*Note: this sample is using the ControllerAs syntax, usage is slightly different without ControllerAs, see API section for more details*
 
 ```JS
 import * as CounterActions from '../actions/counter';
@@ -54,7 +50,7 @@ class CounterController {
     /* ngRedux will merge the requested state's slice and actions onto the $scope, 
     you don't need to redefine them in your controller */
     
-    $ngRedux.connect($scope, this.mapStateToScope, CounterActions, 'vm');
+    $ngRedux.connect($scope, this.mapStateToScope, CounterActions);
   }
 
   // Which part of the Redux global state does our component want to receive on $scope?
@@ -88,7 +84,7 @@ Creates the Redux store, and allow `connect()` to access it.
 * [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 
-### `connect([scope], [mapStateToScope], [mapDispatchToScope], [propertyKey])`
+### `connect([scope], [mapStateToScope], [mapDispatchToScope])`
 
 Connects an Angular component to Redux.
 
@@ -96,10 +92,9 @@ Connects an Angular component to Redux.
 * [`scope`] \(*Object*): The `$scope` of your controller.
 * [`mapStateToScope`] \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`.
 * [`mapDispatchToScope`] \(*Object* or *Function*): If an object is passed, each function inside it will be assumed to be a Redux action creator. An object with the same function names, but bound to a Redux store, will be merged into your component `$scope`. If a function is passed, it will be given `dispatch`. It’s up to you to return an object that somehow uses `dispatch` to bind action creators in your own way. (Tip: you may use the [`bindActionCreators()`](http://gaearon.github.io/redux/docs/api/bindActionCreators.html) helper from Redux.).
-* [`propertyKey`] \(*string*): If provided, `mapStateToScope` and `mapDispatchToScope` will merge onto `$scope[propertyKey]`. This is needed especially when using the `ControllerAs` syntax: in this case you should provide the same value than the value provided to controllerAs (e.g: `'vm'`). When not using `ControllerAs` syntax, you are free to omit this argument, everything will be merged directly onto `$scope`.
 
 #### Remarks
-As `$scope` is passed to `connect`, ngRedux will listen to the `$destroy` event and unsubscribe the change listener itself, you don't need to keep track of your subscribtions.
+* As `$scope` is passed to `connect`, ngRedux will listen to the `$destroy` event and unsubscribe the change listener itself, you don't need to keep track of your subscribtions.
 
 ### Store API
 All of redux's store methods (i.e. `dispatch`, `subscribe` and `getState`) are exposed by $ngRedux and can be accessed directly. For example:
