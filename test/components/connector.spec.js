@@ -14,8 +14,8 @@ describe('Connector', () => {
       baz: action.payload
     }));
     scopeStub = {
-      $on: () => { },
-      $destroy: () => { }
+      $on: () => {},
+      $destroy: () => {}
     };
     connect = Connector(store);
   });
@@ -39,17 +39,6 @@ describe('Connector', () => {
       () => ({
         vm: { test: 1 }
       }));
-
-    expect(scopeStub.vm).toEqual({ test: 1 });
-  });
-
-  it('Should extend scope[propertyKey] if propertyKey is passed', () => {
-    connect(
-      scopeStub,
-      () => ({ test: 1 }),
-      () => { },
-      'vm'
-      );
 
     expect(scopeStub.vm).toEqual({ test: 1 });
   });

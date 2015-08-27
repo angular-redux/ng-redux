@@ -4,7 +4,7 @@
   "description": "ng-redux counter example",
   "main": "index.js",
   "scripts": {
-    "start": "webpack && webpack-dev-server --content-base build/ --hot"
+    "start": "webpack && webpack-dev-server --content-base dist/ --hot"
   },
   "repository": {
     "type": "git",

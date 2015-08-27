@@ -1,10 +1,11 @@
 import shallowEqual from '../utils/shallowEqual';
 import wrapActionCreators from '../utils/wrapActionCreators';
+import findControllerAsKey from '../utils/findControllerAsKey';
 import invariant from 'invariant';
 import _ from 'lodash';
 
 export default function Connector(store) {
-  return (scope, mapStateToScope, mapDispatchToScope = {}, propertyKey) => {
+  return (scope, mapStateToScope, mapDispatchToScope = {}) => {
 
     invariant(
       scope && _.isFunction(scope.$on) && _.isFunction(scope.$destroy),
@@ -19,11 +20,10 @@ export default function Connector(store) {
       'mapDispatchToScope must be a plain Object or a Function. Instead received $s.', mapDispatchToScope
       );
 
+    const propertyKey = findControllerAsKey(scope);
+
     let slice = getStateSlice(store.getState(), mapStateToScope);
     let target = propertyKey ? scope[propertyKey] : scope;
-     if(!target) {
-      target = scope[propertyKey] = {};
-     }
 
     const finalMapDispatchToScope = _.isPlainObject(mapDispatchToScope) ?
       wrapActionCreators(mapDispatchToScope) :
@@ -39,7 +39,6 @@ export default function Connector(store) {
         _.assign(target, slice);
       }
     });
-  
   }
 }
 
