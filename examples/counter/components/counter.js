@@ -1,5 +1,4 @@
 import * as CounterActions from '../actions/counter';
-import { bindActionCreators } from 'redux';
 
 export default function counter() {
   return {
