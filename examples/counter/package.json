@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "angular": "^1.4.4",
-    "ng-redux": "file:../../ng-redux-1.0.0-rc.tgz",
+    "ng-redux": "^1.0.0-rc.2",
     "redux": "^1.0.1",
     "redux-thunk": "^0.1.0"
   }
