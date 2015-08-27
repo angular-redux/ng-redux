@@ -51,6 +51,9 @@ import * as CounterActions from '../actions/counter';
 
 class CounterController {
   constructor($ngRedux, $scope) {
+    /* ngRedux will merge the requested state's slice and actions onto the $scope, 
+    you don't need to redefine them in your controller */
+    
     $ngRedux.connect($scope, this.mapStateToScope, CounterActions, 'vm');
   }
 
@@ -61,6 +64,16 @@ class CounterController {
     };
   }
 }
+```
+
+```HTML
+<div>
+    <p>Clicked: {{vm.counter}} times </p>
+    <button ng-click='vm.increment()'>+</button>
+    <button ng-click='vm.decrement()'>-</button>
+    <button ng-click='vm.incrementIfOdd()'>Increment if odd</button>
+    <button ng-click='vm.incrementAsync()'>Increment Async</button>
+</div>
 ```
 
 ## API
@@ -92,7 +105,10 @@ As `$scope` is passed to `connect`, ngRedux will listen to the `$destroy` event 
 All of redux's store methods (i.e. `dispatch`, `subscribe` and `getState`) are exposed by $ngRedux and can be accessed directly. For example:
 
 ```JS
-redux.bindActionCreators(actionCreator, $ngRedux.dispatch);
+$ngRedux.subscribe(() => {
+    let state = $ngRedux.getState();
+    //...
+})
 ```
 
 This means that you are free to use Redux basic API in advanced cases where `connect`'s API would not fill your needs.
