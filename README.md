@@ -42,6 +42,7 @@ angular.module('app', ['ngRedux'])
 
 #### Usage
 
+*Using controllerAs syntax*
 ```JS
 import * as CounterActions from '../actions/counter';
 
