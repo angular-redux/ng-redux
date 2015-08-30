@@ -47,14 +47,15 @@ import * as CounterActions from '../actions/counter';
 
 class CounterController {
   constructor($ngRedux, $scope) {
-    /* ngRedux will merge the requested state's slice and actions onto the $scope, 
+    /* ngRedux will merge the requested state's slice and actions onto this, 
     you don't need to redefine them in your controller */
     
-    $ngRedux.connect($scope, this.mapStateToScope, CounterActions);
+    let unsubscribe = $ngRedux.connect(this.mapStateToTarget, CounterActions)(this);
+    $scope.$on('$destroy', unsubscribe);
   }
 
   // Which part of the Redux global state does our component want to receive on $scope?
-  mapStateToScope(state) {
+  mapStateToTarget(state) {
     return {
       counter: state.counter
     };
@@ -84,17 +85,29 @@ Creates the Redux store, and allow `connect()` to access it.
 * [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 
-### `connect([scope], [mapStateToScope], [mapDispatchToScope])`
+### `connect([scope], [mapStateToTarget], [mapDispatchToTarget])([target])`
 
 Connects an Angular component to Redux.
 
 #### Arguments
-* [`scope`] \(*Object*): The `$scope` of your controller.
-* [`mapStateToScope`] \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`.
-* [`mapDispatchToScope`] \(*Object* or *Function*): If an object is passed, each function inside it will be assumed to be a Redux action creator. An object with the same function names, but bound to a Redux store, will be merged into your component `$scope`. If a function is passed, it will be given `dispatch`. It’s up to you to return an object that somehow uses `dispatch` to bind action creators in your own way. (Tip: you may use the [`bindActionCreators()`](http://gaearon.github.io/redux/docs/api/bindActionCreators.html) helper from Redux.).
+* [`mapStateToTarget`] \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`.
+* [`mapDispatchToTarget`] \(*Object* or *Function*): Optional. If an object is passed, each function inside it will be assumed to be a Redux action creator. An object with the same function names, but bound to a Redux store, will be merged onto `target`. If a function is passed, it will be given `dispatch`. It’s up to you to return an object that somehow uses `dispatch` to bind action creators in your own way. (Tip: you may use the [`bindActionCreators()`](http://gaearon.github.io/redux/docs/api/bindActionCreators.html) helper from Redux.).
+
+*You then need to invoke the function a second time, with `target` as parameter:*
+* [`target`] \(*Object* or *Function*): If passed an object, the results of `mapStateToTarget` and `mapDispatchToTarget` will be merged onto it. If passed a function, the function will receive the results of `mapStateToTarget` and `mapDispatchToTarget` as parameter.
+
+e.g:
+```JS 
+connect(this.mapState, this.mapDispatch)(this);
+//Or
+connect(this.mapState, this.mapDispatch)((selectedState, actions) => {/* ... */});
+```
+
 
 #### Remarks
-* As `$scope` is passed to `connect`, ngRedux will listen to the `$destroy` event and unsubscribe the change listener itself, you don't need to keep track of your subscribtions.
+* The `mapStateToTarget` function takes a single argument of the entire Redux store’s state and returns an object to be passed as props. It is often called a selector. Use reselect to efficiently compose selectors and compute derived data.
+
+
 
 ### Store API
 All of redux's store methods (i.e. `dispatch`, `subscribe` and `getState`) are exposed by $ngRedux and can be accessed directly. For example:
