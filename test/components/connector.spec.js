@@ -1,4 +1,5 @@
 import expect from 'expect';
+let sinon = require('sinon');
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
 import _ from 'lodash';
@@ -6,76 +7,94 @@ import _ from 'lodash';
 describe('Connector', () => {
   let store;
   let connect;
-  let scopeStub;
+  let targetObj;
 
   beforeEach(() => {
     store = createStore((state, action) => ({
       foo: 'bar',
       baz: action.payload
     }));
-    scopeStub = {
-      $on: () => {},
-      $destroy: () => {}
-    };
+    targetObj = {};
     connect = Connector(store);
   });
 
-	it('Should throw when not passed a $scope object', () => {
-	  expect(connect.bind(connect, () => { }, () => ({}))).toThrow();
-	  expect(connect.bind(connect, 15, () => ({}))).toThrow();
-	  expect(connect.bind(connect, undefined, () => ({}))).toThrow();
-	  expect(connect.bind(connect, {}, () => ({}))).toThrow();
+	it('Should throw when target is not a Function or a plain object', () => {
+	  expect(connect(() => ({})).bind(connect, 15)).toThrow();
+	  expect(connect(() => ({})).bind(connect, undefined)).toThrow();
+	  expect(connect(() => ({})).bind(connect, 'test')).toThrow();
 
-	  expect(connect.bind(connect, scopeStub, () => ({}))).toNotThrow();
+	  expect(connect(() => ({})).bind(connect, {})).toNotThrow();
+    expect(connect(() => ({})).bind(connect, () => {})).toNotThrow();
+
 	});
 
-  it('Should throw when selector does not return a plain object as target', () => {
-    expect(connect.bind(connect, scopeStub, state => state.foo)).toThrow();
+  it('Should throw when selector does not return a plain object', () => {
+    expect(connect.bind(connect, state => state.foo)).toThrow();
   });
 
-  it('Should extend scope with selected state once directly after creation', () => {
-    connect(
-      scopeStub,
+  it('Should extend target (Object) with selected state once directly after creation', () => {
+     connect(
       () => ({
         vm: { test: 1 }
-      }));
+      }))(targetObj);
 
-    expect(scopeStub.vm).toEqual({ test: 1 });
+    expect(targetObj.vm).toEqual({ test: 1 });
   });
 
-  it('Should update the scope passed to connect when the store updates', () => {
-    connect(scopeStub, state => state);
+  it('Should update the target (Object) passed to connect when the store updates', () => {
+    connect(state => state)(targetObj);
     store.dispatch({ type: 'ACTION', payload: 0 });
-    expect(scopeStub.baz).toBe(0);
+    expect(targetObj.baz).toBe(0);
     store.dispatch({ type: 'ACTION', payload: 1 });
-    expect(scopeStub.baz).toBe(1);
+    expect(targetObj.baz).toBe(1);
   });
 
   it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
-    connect(scopeStub, state => state);
+    connect(state => state)(targetObj);
     store.dispatch({ type: 'ACTION', payload: 5 });
 
-    expect(scopeStub.baz).toBe(5);
+    expect(targetObj.baz).toBe(5);
 
-    scopeStub.baz = 0;
+    targetObj.baz = 0;
 
     //this should not replace our mutation, since the state didn't change 
     store.dispatch({ type: 'ACTION', payload: 5 });
 
-    expect(scopeStub.baz).toBe(0);
+    expect(targetObj.baz).toBe(0);
 
   });
 
-  it('Should extend scope with actionCreators', () => {
-    connect(scopeStub, () => ({}), { ac1: () => { }, ac2: () => { } });
-    expect(_.isFunction(scopeStub.ac1)).toBe(true);
-    expect(_.isFunction(scopeStub.ac2)).toBe(true);
+  it('Should extend target (object) with actionCreators', () => {
+    connect(() => ({}), { ac1: () => { }, ac2: () => { } })(targetObj);
+    expect(_.isFunction(targetObj.ac1)).toBe(true);
+    expect(_.isFunction(targetObj.ac2)).toBe(true);
   });
 
-  it('Should provide dispatch to mapDispatchToScope when receiving a Function', () => {
+   it('Should return an unsubscribing function', () => {
+    const unsubscribe = connect(state => state)(targetObj);
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(targetObj.baz).toBe(5);
+
+    unsubscribe();
+
+    store.dispatch({ type: 'ACTION', payload: 7 });
+
+    expect(targetObj.baz).toBe(5);
+
+  });
+
+  it('Should provide dispatch to mapDispatchToTarget when receiving a Function', () => {
     let receivedDispatch;
-    connect(scopeStub, () => ({}), dispatch => { receivedDispatch = dispatch });
+    connect(() => ({}), dispatch => { receivedDispatch = dispatch })(targetObj);
     expect(receivedDispatch).toBe(store.dispatch);
+  });
+
+  it('Should call target (Function) with mapStateToTarget and mapDispatchToTarget results ', () => {
+
+    //let targetFunc = sinon.spy();
+    //connect(targetFunc, state => state.pojo);
+    expect(false).toBe(true);
   });
 
 });
