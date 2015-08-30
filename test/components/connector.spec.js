@@ -8,12 +8,16 @@ describe('Connector', () => {
   let store;
   let connect;
   let targetObj;
+  let defaultState;
 
   beforeEach(() => {
-    store = createStore((state, action) => ({
+    defaultState = {
       foo: 'bar',
-      baz: action.payload
-    }));
+      baz: -1
+    };
+    store = createStore((state = defaultState, action) => {
+      return {...state, baz: action.payload};
+    });
     targetObj = {};
     connect = Connector(store);
   });
@@ -45,8 +49,8 @@ describe('Connector', () => {
     connect(state => state)(targetObj);
     store.dispatch({ type: 'ACTION', payload: 0 });
     expect(targetObj.baz).toBe(0);
-    store.dispatch({ type: 'ACTION', payload: 1 });
-    expect(targetObj.baz).toBe(1);
+    store.dispatch({ type: 'ACTION', payload: 7 });
+    expect(targetObj.baz).toBe(7);
   });
 
   it('Should prevent unnecessary updates when state does not change (shallowly)', () => {
@@ -88,13 +92,6 @@ describe('Connector', () => {
     let receivedDispatch;
     connect(() => ({}), dispatch => { receivedDispatch = dispatch })(targetObj);
     expect(receivedDispatch).toBe(store.dispatch);
-  });
-
-  it('Should call target (Function) with mapStateToTarget and mapDispatchToTarget results ', () => {
-
-    //let targetFunc = sinon.spy();
-    //connect(targetFunc, state => state.pojo);
-    expect(false).toBe(true);
   });
 
 });
