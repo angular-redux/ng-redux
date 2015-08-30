@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
-  let _middlewares = [];
+  let _middlewares = undefined;
   let _storeEnhancers = undefined;
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers) => {
@@ -24,7 +24,7 @@ export default function ngReduxProvider() {
 
       _reducer = reducer;
       _storeEnhancers = storeEnhancers
-      _middlewares = middlewares;
+      _middlewares = middlewares || [];
   };
 
   this.$get = ($injector) => {
