@@ -86,7 +86,7 @@ Creates the Redux store, and allow `connect()` to access it.
 * [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 
-### `connect(mapStateToTarget, [mapDispatchToTarget])([target])`
+### `connect(mapStateToTarget, [mapDispatchToTarget])(target)`
 
 Connects an Angular component to Redux.
 
