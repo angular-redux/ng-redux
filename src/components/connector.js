@@ -3,26 +3,31 @@ import wrapActionCreators from '../utils/wrapActionCreators';
 import invariant from 'invariant';
 import _ from 'lodash';
 
+const defaultMapStateToTarget = () => ({});
+const defaultMapDispatchToTarget = dispatch => ({dispatch});
+
 export default function Connector(store) {
-  return (mapStateToTarget, mapDispatchToTarget = dispatch => ({dispatch})) => {
-    invariant(
-      _.isFunction(mapStateToTarget),
-      'mapStateToTarget must be a Function. Instead received $s.', mapStateToTarget
-      );
+  return (mapStateToTarget, mapDispatchToTarget) => {
 
-    invariant(
-      _.isPlainObject(mapDispatchToTarget) || _.isFunction(mapDispatchToTarget),
-      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', mapDispatchToTarget
-      );
-
-    let slice = getStateSlice(store.getState(), mapStateToTarget);
+    const finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
     const finalMapDispatchToTarget = _.isPlainObject(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
-      mapDispatchToTarget;
+      mapDispatchToTarget || defaultMapDispatchToTarget;
 
-      //find better name
-    const actions = finalMapDispatchToTarget(store.dispatch);
+    invariant(
+      _.isFunction(finalMapStateToTarget),
+      'mapStateToTarget must be a Function. Instead received $s.', finalMapStateToTarget
+      );
+
+    invariant(
+      _.isPlainObject(finalMapDispatchToTarget) || _.isFunction(finalMapDispatchToTarget),
+      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', finalMapDispatchToTarget
+      );
+
+    let slice = getStateSlice(store.getState(), finalMapStateToTarget);
+
+    const boundActionCreators = finalMapDispatchToTarget(store.dispatch);
 
     return (target) => {
 
@@ -31,14 +36,14 @@ export default function Connector(store) {
         'The target parameter passed to connect must be a Function or a plain object.'
         );
 
-       //Initial update
-      updateTarget(target, slice, actions);
+      //Initial update
+      updateTarget(target, slice, boundActionCreators);
 
       const unsubscribe = store.subscribe(() => {
-        const nextSlice = getStateSlice(store.getState(), mapStateToTarget);
+        const nextSlice = getStateSlice(store.getState(), finalMapStateToTarget);
         if (!shallowEqual(slice, nextSlice)) {
           slice = nextSlice;
-          updateTarget(target, slice, actions);
+          updateTarget(target, slice, boundActionCreators);
         }
       });
       return unsubscribe;
