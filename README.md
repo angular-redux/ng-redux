@@ -76,26 +76,26 @@ class CounterController {
 
 ## API
 
-### `createStoreWith([reducer], [middlewares], [storeEnhancers])`
+### `createStoreWith(reducer, [middlewares], [storeEnhancers])`
 
 Creates the Redux store, and allow `connect()` to access it.
 
 #### Arguments: 
-* [`reducer`] \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
+* `reducer` \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
 * [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
 * [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 
 
-### `connect([scope], [mapStateToTarget], [mapDispatchToTarget])([target])`
+### `connect(mapStateToTarget, [mapDispatchToTarget])([target])`
 
 Connects an Angular component to Redux.
 
 #### Arguments
-* [`mapStateToTarget`] \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`.
+* `mapStateToTarget` \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`. If you have a component which simply triggers actions without needing any state you can pass null to `mapStateToTarget`.
 * [`mapDispatchToTarget`] \(*Object* or *Function*): Optional. If an object is passed, each function inside it will be assumed to be a Redux action creator. An object with the same function names, but bound to a Redux store, will be merged onto `target`. If a function is passed, it will be given `dispatch`. It’s up to you to return an object that somehow uses `dispatch` to bind action creators in your own way. (Tip: you may use the [`bindActionCreators()`](http://gaearon.github.io/redux/docs/api/bindActionCreators.html) helper from Redux.).
 
 *You then need to invoke the function a second time, with `target` as parameter:*
-* [`target`] \(*Object* or *Function*): If passed an object, the results of `mapStateToTarget` and `mapDispatchToTarget` will be merged onto it. If passed a function, the function will receive the results of `mapStateToTarget` and `mapDispatchToTarget` as parameters.
+* `target` \(*Object* or *Function*): If passed an object, the results of `mapStateToTarget` and `mapDispatchToTarget` will be merged onto it. If passed a function, the function will receive the results of `mapStateToTarget` and `mapDispatchToTarget` as parameters.
 
 e.g:
 ```JS 
