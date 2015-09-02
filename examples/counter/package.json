@@ -22,14 +22,13 @@
     "html-loader": "^0.3.0",
     "html-webpack-plugin": "^1.6.1",
     "react": "^0.13.3",
-    "redux-devtools": "^1.1.1",
     "webpack": "^1.11.0",
     "webpack-dev-server": "^1.10.1"
   },
   "dependencies": {
     "angular": "^1.4.4",
-    "ng-redux": "^1.0.0-rc.2",
-    "redux": "^1.0.1",
+    "ng-redux": "2.0.0",
+    "redux": "^2.0.0",
     "redux-thunk": "^0.1.0"
   }
 }

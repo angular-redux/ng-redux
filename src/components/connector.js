@@ -1,53 +1,63 @@
 import shallowEqual from '../utils/shallowEqual';
 import wrapActionCreators from '../utils/wrapActionCreators';
-import findControllerAsKey from '../utils/findControllerAsKey';
 import invariant from 'invariant';
 import _ from 'lodash';
 
+const defaultMapStateToTarget = () => ({});
+const defaultMapDispatchToTarget = dispatch => ({dispatch});
+
 export default function Connector(store) {
-  return (scope, mapStateToScope, mapDispatchToScope = {}) => {
+  return (mapStateToTarget, mapDispatchToTarget) => {
+
+    const finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
+
+    const finalMapDispatchToTarget = _.isPlainObject(mapDispatchToTarget) ?
+      wrapActionCreators(mapDispatchToTarget) :
+      mapDispatchToTarget || defaultMapDispatchToTarget;
 
     invariant(
-      scope && _.isFunction(scope.$on) && _.isFunction(scope.$destroy),
-      'The scope parameter passed to connect must be an instance of $scope.'
+      _.isFunction(finalMapStateToTarget),
+      'mapStateToTarget must be a Function. Instead received $s.', finalMapStateToTarget
       );
+
     invariant(
-      _.isFunction(mapStateToScope),
-      'mapStateToScope must be a Function. Instead received $s.', mapStateToScope
-      );
-    invariant(
-      _.isPlainObject(mapDispatchToScope) || _.isFunction(mapDispatchToScope),
-      'mapDispatchToScope must be a plain Object or a Function. Instead received $s.', mapDispatchToScope
+      _.isPlainObject(finalMapDispatchToTarget) || _.isFunction(finalMapDispatchToTarget),
+      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', finalMapDispatchToTarget
       );
 
-    const propertyKey = findControllerAsKey(scope);
+    let slice = getStateSlice(store.getState(), finalMapStateToTarget);
 
-    let slice = getStateSlice(store.getState(), mapStateToScope);
-    let target = propertyKey ? scope[propertyKey] : scope;
+    const boundActionCreators = finalMapDispatchToTarget(store.dispatch);
 
-    const finalMapDispatchToScope = _.isPlainObject(mapDispatchToScope) ?
-      wrapActionCreators(mapDispatchToScope) :
-      mapDispatchToScope;
+    return (target) => {
 
-    //Initial update
-    _.assign(target, slice, finalMapDispatchToScope(store.dispatch));
+      invariant(
+        _.isFunction(target) || _.isObject(target),
+        'The target parameter passed to connect must be a Function or a plain object.'
+        );
 
-    subscribe(scope, store, () => {
-      const nextSlice = getStateSlice(store.getState(), mapStateToScope);
-      if (!shallowEqual(slice, nextSlice)) {
-        slice = nextSlice;
-        _.assign(target, slice);
-      }
-    });
+      //Initial update
+      updateTarget(target, slice, boundActionCreators);
+
+      const unsubscribe = store.subscribe(() => {
+        const nextSlice = getStateSlice(store.getState(), finalMapStateToTarget);
+        if (!shallowEqual(slice, nextSlice)) {
+          slice = nextSlice;
+          updateTarget(target, slice, boundActionCreators);
+        }
+      });
+      return unsubscribe;
+    }
+
   }
 }
 
-function subscribe(scope, store, callback) {
-  const unsubscribe = store.subscribe(callback);
-
-  scope.$on('$destroy', () => {
-    unsubscribe();
-  });
+function updateTarget(target, StateSlice, dispatch) {
+  if(_.isFunction(target)) {
+    target(StateSlice, dispatch);
+  } else {
+    _.assign(target, StateSlice, dispatch);
+  }
 }
 
 function getStateSlice(state, mapStateToScope) {

@@ -13,7 +13,8 @@ export default function counter() {
 class CounterController {
 
   constructor($ngRedux, $scope) {
-    $ngRedux.connect($scope, this.mapStateToScope, CounterActions, 'vm');
+    const unsubscribe = $ngRedux.connect(this.mapStateToScope, CounterActions)(this);
+    $scope.$on('$destroy', unsubscribe);
   }
 
   // Which part of the Redux global state does our component want to receive on $scope?
