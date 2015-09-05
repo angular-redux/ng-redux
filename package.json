@@ -2,7 +2,7 @@
   "name": "ng-redux",
   "version": "2.0.1",
   "description": "Redux bindings for Angular.js",
-  "main": "/lib/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "build": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "test": "mocha --compilers js:babel/register --recursive"
