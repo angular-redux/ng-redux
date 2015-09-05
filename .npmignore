@@ -1,2 +1,7 @@
 src
 test
+examples
+.DS_Store
+*.log
+*.tgs
+*.yml
