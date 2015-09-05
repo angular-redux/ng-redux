@@ -102,8 +102,10 @@ e.g:
 connect(this.mapState, this.mapDispatch)(this);
 //Or
 connect(this.mapState, this.mapDispatch)((selectedState, actions) => {/* ... */});
-```
 
+```
+#### Returns
+Returns a *Function* allowing to unsubscribe from further store updates.
 
 #### Remarks
 * The `mapStateToTarget` function takes a single argument of the entire Redux store’s state and returns an object to be passed as props. It is often called a selector. Use reselect to efficiently compose selectors and compute derived data.
