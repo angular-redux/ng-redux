@@ -10,7 +10,7 @@ angular.module('counter')
     );
     //Hack to reflect state changes when disabling/enabling actions via the monitor
     $ngRedux.subscribe(_ => {
-        setTimeout($rootScope.$apply, 100);
+        setTimeout($rootScope.$apply.bind($rootScope), 100);
     });
   });
 

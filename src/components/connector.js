@@ -33,7 +33,7 @@ export default function Connector(store) {
 
       invariant(
         _.isFunction(target) || _.isObject(target),
-        'The target parameter passed to connect must be a Function or a plain object.'
+        'The target parameter passed to connect must be a Function or a object.'
         );
 
       //Initial update
