@@ -32,6 +32,6 @@
   "dependencies": {
     "invariant": "^2.1.0",
     "lodash": "^3.10.1",
-    "redux": "^2.0.0"
+    "redux": "^3.0.0"
   }
 }
