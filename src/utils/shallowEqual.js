@@ -3,8 +3,9 @@
      return true;
    }
 
-   var keysA = Object.keys(objA);
-   var keysB = Object.keys(objB);
+   /* $$hashKey is added by angular when using ng-repeat, we ignore that*/
+   var keysA = Object.keys(objA).filter(k => k !== '$$hashKey');
+   var keysB = Object.keys(objB).filter(k => k !== '$$hashKey');
 
    if (keysA.length !== keysB.length) {
      return false;
