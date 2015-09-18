@@ -51,14 +51,14 @@ class CounterController {
     /* ngRedux will merge the requested state's slice and actions onto this, 
     you don't need to redefine them in your controller */
     
-    let unsubscribe = $ngRedux.connect(this.mapStateToTarget, CounterActions)(this);
+    let unsubscribe = $ngRedux.connect(this.mapStateTothis, CounterActions)(this);
     $scope.$on('$destroy', unsubscribe);
   }
 
-  // Which part of the Redux global state does our component want to receive on $scope?
-  mapStateToTarget(state) {
+  // Which part of the Redux global state does our component want to receive?
+  mapStateToThis(state) {
     return {
-      counter: state.counter
+      value: state.counter
     };
   }
 }
