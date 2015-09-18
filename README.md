@@ -31,9 +31,9 @@ npm install --save ng-redux
 import reducers from './reducers';
 import { combineReducers } from 'redux';
 import loggingMiddleware from './loggingMiddleware';
-import 'ng-redux';
+import ngRedux from 'ng-redux';
 
-angular.module('app', ['ngRedux'])
+angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
     let reducer = combineReducers(reducers);
     $ngReduxProvider.createStoreWith(reducer, ['promiseMiddleware', loggingMiddleware]);
