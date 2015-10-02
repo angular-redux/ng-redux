@@ -128,7 +128,7 @@ This means that you are free to use Redux basic API in advanced cases where `con
 
 
 ## UI-Router
-See [redux-ui-router](https://github.com/neilff/redux-ui-router)
+See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redux and UI-Router work together.
 
 ## Using DevTools
 In order to use Redux DevTools with your angular app, you need to install [react](https://www.npmjs.com/package/react), [react-redux](https://www.npmjs.com/package/react-redux) and [redux-devtools](https://www.npmjs.com/package/redux-devtools) as development dependencies.
