@@ -15,7 +15,9 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [API](#api)
+- [UI-Router](#ui-router)
 - [Using DevTools](#using-devtools)
+
 
 ## Installation
 
@@ -124,6 +126,9 @@ $ngRedux.subscribe(() => {
 
 This means that you are free to use Redux basic API in advanced cases where `connect`'s API would not fill your needs.
 
+
+## UI-Router
+See [redux-ui-router](https://github.com/neilff/redux-ui-router)
 
 ## Using DevTools
 In order to use Redux DevTools with your angular app, you need to install [react](https://www.npmjs.com/package/react), [react-redux](https://www.npmjs.com/package/react-redux) and [redux-devtools](https://www.npmjs.com/package/redux-devtools) as development dependencies.
