@@ -1,0 +1,7 @@
+<span>
+  <h1>{{picker.value}}</h1>
+  <select ng-options="option for option in picker.options"
+    ng-model="picker.value"
+    ng-change="picker.onChange(picker.value)">
+  </select>
+</span>
