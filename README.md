@@ -17,6 +17,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [API](#api)
 - [Routers](#routers)
 - [Using DevTools](#using-devtools)
+- [Addtional Resources](#additional-resources)
 
 
 ## Installation
@@ -178,3 +179,6 @@ angular.module('app', ['ngRedux'])
     <div id="devTools"></div>
 </body>
 ```
+
+## Additional Resources
+* [Managing state with Redux and Angular](http://blog.rangle.io/managing-state-redux-angular/)
