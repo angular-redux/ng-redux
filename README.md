@@ -21,9 +21,19 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 
 ## Installation
-
+#### npm
 ```js
 npm install --save ng-redux
+```
+#### bower
+```js
+bower install --save ng-redux
+```
+
+Add the following script tag to your html:
+
+```html
+<script src="bower_components/ng-redux/dist/ng-redux.js"></script>
 ```
 
 ## Quick Start
