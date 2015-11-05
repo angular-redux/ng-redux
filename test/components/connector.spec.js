@@ -2,7 +2,7 @@ import expect from 'expect';
 let sinon = require('sinon');
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
-import _ from 'lodash';
+import isFunction from 'lodash.isfunction';
 
 describe('Connector', () => {
   let store;
@@ -70,8 +70,8 @@ describe('Connector', () => {
 
   it('Should extend target (object) with actionCreators', () => {
     connect(() => ({}), { ac1: () => { }, ac2: () => { } })(targetObj);
-    expect(_.isFunction(targetObj.ac1)).toBe(true);
-    expect(_.isFunction(targetObj.ac2)).toBe(true);
+    expect(isFunction(targetObj.ac1)).toBe(true);
+    expect(isFunction(targetObj.ac2)).toBe(true);
   });
 
    it('Should return an unsubscribing function', () => {
