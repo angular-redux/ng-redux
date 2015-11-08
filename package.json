@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "build": "rm -rf lib && `npm bin`/babel src --out-dir lib",
+    "dist": "npm run build && ./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.js",
     "test": "mocha --compilers js:babel/register --recursive"
   },
   "repository": {
@@ -31,7 +32,11 @@
   },
   "dependencies": {
     "invariant": "^2.1.0",
-    "lodash": "^3.10.1",
+    "lodash.assign": "^3.2.0",
+    "lodash.isarray": "^3.0.4",
+    "lodash.isfunction": "^3.0.6",
+    "lodash.isobject": "^3.0.2",
+    "lodash.isplainobject": "^3.2.0",
     "redux": "^3.0.0"
   }
 }
