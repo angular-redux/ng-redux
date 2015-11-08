@@ -4,3 +4,4 @@ npm-debug.log
 lib
 coverage
 *.tgz
+examples/**/dist
