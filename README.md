@@ -17,7 +17,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [API](#api)
 - [Routers](#routers)
 - [Using DevTools](#using-devtools)
-- [Addtional Resources](#additional-resources)
+- [Additional Resources](#additional-resources)
 
 
 ## Installation
