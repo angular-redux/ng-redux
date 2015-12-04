@@ -137,6 +137,9 @@ $ngRedux.subscribe(() => {
 
 This means that you are free to use Redux basic API in advanced cases where `connect`'s API would not fill your needs.
 
+## Dependency Injectable Middleware
+You can use angularjs DI mechanism to resolve dependencies inside a `middleware`.
+To do so, define your middleware as a service
 
 ## Routers
 See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redux and UI-Router work together. <br>
