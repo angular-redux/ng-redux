@@ -15,6 +15,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [API](#api)
+- [Dependency Injectable Middleware](#dependency-injectable-middleware)
 - [Routers](#routers)
 - [Using DevTools](#using-devtools)
 - [Additional Resources](#additional-resources)
@@ -138,8 +139,26 @@ $ngRedux.subscribe(() => {
 This means that you are free to use Redux basic API in advanced cases where `connect`'s API would not fill your needs.
 
 ## Dependency Injectable Middleware
-You can use angularjs DI mechanism to resolve dependencies inside a `middleware`.
-To do so, define your middleware as a service
+You can use angularjs dependency injection mechanism to resolve dependencies inside a `middleware`.
+To do so, define a factory returning a middleware:
+
+```Javascript
+function myInjectableMiddleware($http, anotherDependency) {
+    return store => next => action => {
+        //middleware's code
+    }
+}
+
+angular.factory('myInjectableMiddleware', myInjectableMiddleware);
+```
+
+And simply register your middleware during store creation:
+
+```Javascript
+$ngReduxProvider.createStoreWith(reducers, [thunk, 'myInjectableMiddleware']);
+```
+
+Middlewares passed as **string** will then be resolved throught angular's injector.
 
 ## Routers
 See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redux and UI-Router work together. <br>
