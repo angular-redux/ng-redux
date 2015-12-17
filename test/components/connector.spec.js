@@ -22,15 +22,13 @@ describe('Connector', () => {
     connect = Connector(store);
   });
 
-	it('Should throw when target is not a Function or a plain object', () => {
-	  expect(connect(() => ({})).bind(connect, 15)).toThrow();
-	  expect(connect(() => ({})).bind(connect, undefined)).toThrow();
-	  expect(connect(() => ({})).bind(connect, 'test')).toThrow();
-
-	  expect(connect(() => ({})).bind(connect, {})).toNotThrow();
+  it('Should throw when target is not a Function or a plain object', () => {
+    expect(connect(() => ({})).bind(connect, 15)).toThrow();
+    expect(connect(() => ({})).bind(connect, undefined)).toThrow();
+    expect(connect(() => ({})).bind(connect, 'test')).toThrow();
+    expect(connect(() => ({})).bind(connect, {})).toNotThrow();
     expect(connect(() => ({})).bind(connect, () => {})).toNotThrow();
-
-	});
+  });
 
   it('Should throw when selector does not return a plain object', () => {
     expect(connect.bind(connect, state => state.foo)).toThrow();
@@ -61,7 +59,7 @@ describe('Connector', () => {
 
     targetObj.baz = 0;
 
-    //this should not replace our mutation, since the state didn't change 
+    //this should not replace our mutation, since the state didn't change
     store.dispatch({ type: 'ACTION', payload: 5 });
 
     expect(targetObj.baz).toBe(0);
