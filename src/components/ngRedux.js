@@ -12,33 +12,33 @@ export default function ngReduxProvider() {
   let _storeEnhancers = undefined;
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers) => {
-  	  invariant(
-         isFunction(reducer),
-        'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
-        typeof reducer
-      );
+    invariant(
+      isFunction(reducer),
+      'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
+      typeof reducer
+    );
 
-      invariant(
-        !storeEnhancers || isArray(storeEnhancers),
-        'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.',
-        typeof storeEnhancers
-      );
+    invariant(
+      !storeEnhancers || isArray(storeEnhancers),
+      'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.',
+      typeof storeEnhancers
+    );
 
-      _reducer = reducer;
-      _storeEnhancers = storeEnhancers
-      _middlewares = middlewares || [];
+    _reducer = reducer;
+    _storeEnhancers = storeEnhancers
+    _middlewares = middlewares || [];
   };
 
   this.$get = ($injector) => {
-  	let store, resolvedMiddleware = [];
+    let store, resolvedMiddleware = [];
 
-  	for(let middleware of _middlewares) {
-  		if(typeof middleware === 'string') {
-  			resolvedMiddleware.push($injector.get(middleware));
-  		} else {
-  			resolvedMiddleware.push(middleware);
-  		}
-  	}
+    for(let middleware of _middlewares) {
+      if(typeof middleware === 'string') {
+        resolvedMiddleware.push($injector.get(middleware));
+      } else {
+        resolvedMiddleware.push(middleware);
+      }
+    }
 
     let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
 
@@ -47,11 +47,11 @@ export default function ngReduxProvider() {
 
     store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
-  	return {
+    return {
       ...store,
       connect: Connector(store)
     };
-  }
+  };
 
   this.$get.$inject = ['$injector'];
 }
