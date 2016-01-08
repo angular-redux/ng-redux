@@ -11,7 +11,7 @@ export default function ngReduxProvider() {
   let _middlewares = undefined;
   let _storeEnhancers = undefined;
 
-  this.createStoreWith = (reducer, middlewares, storeEnhancers) => {
+  this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
       isFunction(reducer),
       'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
@@ -45,7 +45,7 @@ export default function ngReduxProvider() {
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
+    store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, initialState);
 
     return {
       ...store,
