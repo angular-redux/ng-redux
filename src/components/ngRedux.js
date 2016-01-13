@@ -3,6 +3,7 @@ import invariant from 'invariant';
 import {createStore, applyMiddleware, compose} from 'redux';
 import digestMiddleware from './digestMiddleware';
 
+import assign from 'lodash.assign';
 import isArray from 'lodash.isarray';
 import isFunction from 'lodash.isfunction';
 
@@ -49,10 +50,7 @@ export default function ngReduxProvider() {
 
     store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState);
 
-    return {
-      ...store,
-      connect: Connector(store)
-    };
+    return assign({}, store, { connect: Connector(store) });
   };
 
   this.$get.$inject = ['$injector'];

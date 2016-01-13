@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "dist": "npm run build && ./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.js",
-    "test": "mocha --compilers js:babel/register --recursive"
+    "test": "mocha --compilers js:babel-register --recursive"
   },
   "repository": {
     "type": "git",
@@ -19,13 +19,16 @@
   },
   "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
   "devDependencies": {
-    "babel": "^5.8.12",
-    "babel-core": "^5.8.14",
-    "babel-loader": "^5.3.2",
+    "babel-cli": "^6.4.0",
+    "babel-core": "^6.4.0",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-es2015-loose": "^7.0.0",
+    "babel-register": "^6.3.13",
     "expect": "^1.8.0",
     "mocha": "^2.2.5",
     "sinon": "^1.16.1",
-    "webpack": "^1.10.5"
+    "webpack": "^1.12.11"
   },
   "peerDependencies": {
     "redux": "^3.0.0"
