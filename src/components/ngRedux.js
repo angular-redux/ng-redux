@@ -29,7 +29,7 @@ export default function ngReduxProvider() {
     _reducer = reducer;
     _storeEnhancers = storeEnhancers
     _middlewares = middlewares || [];
-    _initialState = initialState || {};
+    _initialState = initialState;
   };
 
   this.$get = ($injector) => {
@@ -48,7 +48,9 @@ export default function ngReduxProvider() {
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState);
+    store = _initialState 
+      ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
+      : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
     return assign({}, store, { connect: Connector(store) });
   };
