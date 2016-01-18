@@ -1,16 +1,17 @@
 {
   "name": "ng-redux",
-  "version": "3.3.1",
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
     "build": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "dist": "npm run build && ./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.js",
-    "test": "mocha --compilers js:babel-register --recursive"
+    "test": "mocha --compilers js:babel-register --recursive",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "cz": "git-cz"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/wbuchwalter/ng-redux"
+    "url": "https://github.com/wbuchwalter/ng-redux"
   },
   "author": "William Buchwalter <wbuchwalter@gmail.com> (http://github.com/wbuchwalter)",
   "license": "MIT",
@@ -28,7 +29,8 @@
     "expect": "^1.8.0",
     "mocha": "^2.2.5",
     "sinon": "^1.16.1",
-    "webpack": "^1.12.11"
+    "webpack": "^1.12.11",
+    "semantic-release": "^4.3.5"
   },
   "peerDependencies": {
     "redux": "^3.0.0"
@@ -41,5 +43,8 @@
     "lodash.isobject": "^3.0.2",
     "lodash.isplainobject": "^3.2.0",
     "redux": "^3.0.0"
+  },
+  "czConfig": {
+    "path": "node_modules/cz-conventional-changelog"
   }
 }
