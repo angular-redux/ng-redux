@@ -21,12 +21,12 @@ export default function Connector(store) {
 
     invariant(
       isFunction(finalMapStateToTarget),
-      'mapStateToTarget must be a Function. Instead received $s.', finalMapStateToTarget
+      'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget
       );
 
     invariant(
       isPlainObject(finalMapDispatchToTarget) || isFunction(finalMapDispatchToTarget),
-      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', finalMapDispatchToTarget
+      'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget
       );
 
     let slice = getStateSlice(store.getState(), finalMapStateToTarget);
