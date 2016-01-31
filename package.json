@@ -7,7 +7,6 @@
     "build:lib": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "build:min": "./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
     "build:max": "./node_modules/.bin/webpack lib/index.js dist/ng-redux.js",
-    "dist": "npm run build",
     "test": "mocha --compilers js:babel-register --recursive",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "cz": "git-cz"
