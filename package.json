@@ -3,10 +3,11 @@
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "npm run build:lib && npm run build:min && npm run build:max",
+    "build": "npm run build:lib && npm run build:min && npm run build:max && npm run build:umd",
     "build:lib": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "build:min": "./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
     "build:max": "./node_modules/.bin/webpack lib/index.js dist/ng-redux.js",
+    "build:umd": "./node_modules/.bin/webpack --optimize-minimize --output-library-target umd lib/index.js dist/ng-redux-umd.min.js",
     "test": "mocha --compilers js:babel-register --recursive",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "cz": "git-cz"
