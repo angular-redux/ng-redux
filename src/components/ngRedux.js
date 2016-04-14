@@ -6,18 +6,18 @@ import digestMiddleware from './digestMiddleware';
 import assign from 'lodash.assign';
 import isArray from 'lodash.isarray';
 import isFunction from 'lodash.isfunction';
-import isObejct from 'lodash.isobject';
+import isObject from 'lodash.isobject';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
   let _middlewares = undefined;
   let _storeEnhancers = undefined;
   let _initialState = undefined;
-  let _reducerIsObejct = undefined;
+  let _reducerIsObject = undefined;
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
-      isFunction(reducer) || isObejct(reducer),
+      isFunction(reducer) || isObject(reducer),
       'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.',
       typeof reducer
     );
@@ -29,7 +29,7 @@ export default function ngReduxProvider() {
     );
 
     _reducer = reducer;
-    _reducerIsObejct = isObejct(reducer);
+    _reducerIsObject = isObject(reducer);
     _storeEnhancers = storeEnhancers
     _middlewares = middlewares || [];
     _initialState = initialState;
@@ -46,7 +46,7 @@ export default function ngReduxProvider() {
       }
     }
 
-    if(_reducerIsObejct) {
+    if(_reducerIsObject) {
       let reducersObj = {};
       let reducKeys = Object.keys(_reducer); 
 
