@@ -1,22 +1,24 @@
 import Connector from './connector';
 import invariant from 'invariant';
-import {createStore, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
 
 import assign from 'lodash.assign';
 import isArray from 'lodash.isarray';
 import isFunction from 'lodash.isfunction';
+import isObejct from 'lodash.isobject';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
   let _middlewares = undefined;
   let _storeEnhancers = undefined;
   let _initialState = undefined;
+  let _reducerIsObejct = undefined;
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
-      isFunction(reducer),
-      'The reducer parameter passed to createStoreWith must be a Function. Instead received %s.',
+      isFunction(reducer) || isObejct(reducer),
+      'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.',
       typeof reducer
     );
 
@@ -27,6 +29,7 @@ export default function ngReduxProvider() {
     );
 
     _reducer = reducer;
+    _reducerIsObejct = isObejct(reducer);
     _storeEnhancers = storeEnhancers
     _middlewares = middlewares || [];
     _initialState = initialState;
@@ -41,6 +44,21 @@ export default function ngReduxProvider() {
       } else {
         resolvedMiddleware.push(middleware);
       }
+    }
+
+    if(_reducerIsObejct) {
+      let reducersObj = {};
+      let reducKeys = Object.keys(_reducer); 
+
+      reducKeys.forEach((key) => {
+        if(typeof _reducer[key] === 'string') { 
+          reducersObj[key] = $injector.get(_reducer[key]);
+        } else {
+          reducersObj[key] = _reducer[key];
+        }  
+      });
+
+      _reducer = combineReducers(reducersObj);
     }
 
     let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
