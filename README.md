@@ -79,6 +79,28 @@ angular.module('app', [ngRedux])
 
 The object can be constructed either by passing a function as value or a string representing the reducer. This way, you can create reducers as services and initialze them inside the `.config`. Behind the secnes, ngRedux will `$injector.get` the string you pass as the value for the ojects of reducers and initilaze it.
 
+You can also pass custom `combineReducers` to `$ngReduxProvider`, which is extremely helpfull if you want to use libraries such as [redux-immutable](https://github.com/gajus/redux-immutable) for example.
+
+```JS
+import reducers from './reducers';
+import myCombineReducers from 'redux-immutable';
+import loggingMiddleware from './loggingMiddleware';
+import ngRedux from 'ng-redux';
+
+angular.module('app', [ngRedux])
+.config(($ngReduxProvider) => {
+	$ngReduxProvider.combineReducersFunc(myCombineReducers);
+	reducer3 = functtion(state, action){}
+	$ngReduxProvider.createStoreWith({
+		reducer1: "reducer1",
+		reducer2: function(state, action){},
+		reducer3: reducer3
+	 }, ['promiseMiddleware', loggingMiddleware]);
+  });
+```
+
+By passing `$ngReduxProvider.combineReducersFunc(myCombineReducers);`, ngRedux will use the new myCombineReducers function instead of the default one that comes with redux.
+
 #### Usage
 
 *Using controllerAs syntax*
