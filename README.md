@@ -41,9 +41,9 @@ Add the following script tag to your html:
 
 #### Initialization
 
-You can initialize ngRedux two ways:
+You can either pass a function or an object to `createStoreWith`.
 
-Function as the reducer argument for the `createStoreWith`:
+With a function:
 
 ```JS
 import reducers from './reducers';
@@ -58,13 +58,14 @@ angular.module('app', [ngRedux])
   });
 ```
 
-A reducer object as reducer argument for the `createStoreWith`:
+With an object:
 
 ```JS
 import reducers from './reducers';
 import { combineReducers } from 'redux';
 import loggingMiddleware from './loggingMiddleware';
 import ngRedux from 'ng-redux';
+import reducer3 from './reducer3';
 
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
@@ -76,8 +77,7 @@ angular.module('app', [ngRedux])
 	 }, ['promiseMiddleware', loggingMiddleware]);
   });
 ```
-
-The object can be constructed either by passing a function as value or a string representing the reducer. This way, you can create reducers as services and initialze them inside the `.config`. Behind the secnes, ngRedux will `$injector.get` the string you pass as the value for the ojects of reducers and initilaze it.
+In this example `reducer1` will be resolved using angular's DI after the config phase.
 
 #### Usage
 
