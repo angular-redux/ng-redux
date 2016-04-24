@@ -1,5 +1,6 @@
 {
   "name": "ng-redux",
+  "version": "3.3.4-beta.0",
   "description": "Redux bindings for Angular.js",
   "main": "./lib/index.js",
   "scripts": {
@@ -7,9 +8,7 @@
     "build:lib": "rm -rf lib && `npm bin`/babel src --out-dir lib",
     "build:min": "./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
     "build:max": "./node_modules/.bin/webpack lib/index.js dist/ng-redux.js",
-    "test": "mocha --compilers js:babel-register --recursive",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "cz": "git-cz"
+    "test": "mocha --compilers js:babel-register --recursive"
   },
   "repository": {
     "type": "git",
