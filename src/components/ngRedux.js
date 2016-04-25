@@ -14,6 +14,17 @@ export default function ngReduxProvider() {
   let _storeEnhancers = undefined;
   let _initialState = undefined;
   let _reducerIsObject = undefined;
+  let _combineReducers = undefined;
+
+  this.setCombineReducersFunc = (func) => {
+    invariant(
+      isFunction(reducer),
+      'The parameter passed to setCombineReducersFunc must be a Function. Instead received %s.',
+      typeof reducer
+    );
+
+    _combineReducers = func;
+  };
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
@@ -37,6 +48,7 @@ export default function ngReduxProvider() {
 
   this.$get = ($injector) => {
     let store, resolvedMiddleware = [];
+    let finalCombineReducers = _combineReducers ? _combineReducers : combineReducers;
 
     for(let middleware of _middlewares) {
       if(typeof middleware === 'string') {
@@ -58,7 +70,7 @@ export default function ngReduxProvider() {
         }  
       });
 
-      _reducer = combineReducers(reducersObj);
+      _reducer = finalCombineReducers(reducersObj);
     }
 
     let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;

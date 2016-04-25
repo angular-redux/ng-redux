@@ -69,7 +69,7 @@ import reducer3 from './reducer3';
 
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
-	reducer3 = functtion(state, action){}
+	reducer3 = function(state, action){}
     $ngReduxProvider.createStoreWith({
 		reducer1: "reducer1",
 		reducer2: function(state, action){},
@@ -78,6 +78,28 @@ angular.module('app', [ngRedux])
   });
 ```
 In this example `reducer1` will be resolved using angular's DI after the config phase.
+
+You can also pass custom `combineReducers` to `$ngReduxProvider`, which is extremely helpfull if you want to use libraries such as [redux-immutable](https://github.com/gajus/redux-immutable) for example.
+
+```JS
+import reducers from './reducers';
+import myCombineReducers from 'redux-immutable';
+import loggingMiddleware from './loggingMiddleware';
+import ngRedux from 'ng-redux';
+
+angular.module('app', [ngRedux])
+.config(($ngReduxProvider) => {
+	$ngReduxProvider.setCombineReducersFunc(myCombineReducers);
+	reducer3 = function(state, action){}
+	$ngReduxProvider.createStoreWith({
+		reducer1: "reducer1",
+		reducer2: function(state, action){},
+		reducer3: reducer3
+	 }, ['promiseMiddleware', loggingMiddleware]);
+  });
+```
+
+By passing `$ngReduxProvider.setCombineReducersFunc(myCombineReducers);`, ngRedux will use the new myCombineReducers function instead of the default one that comes with redux.
 
 #### Usage
 
