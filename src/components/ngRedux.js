@@ -16,10 +16,10 @@ export default function ngReduxProvider() {
   let _reducerIsObject = undefined;
   let _combineReducers = undefined;
 
-  this.combineReducersFunc = (func) => {
+  this.setCombineReducersFunc = (func) => {
     invariant(
       isFunction(reducer),
-      'The parameter passed to combineReducersFunc must be a Function. Instead received %s.',
+      'The parameter passed to setCombineReducersFunc must be a Function. Instead received %s.',
       typeof reducer
     );
 

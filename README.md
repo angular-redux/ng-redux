@@ -68,7 +68,7 @@ import ngRedux from 'ng-redux';
 
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
-	reducer3 = functtion(state, action){}
+	reducer3 = function(state, action){}
     $ngReduxProvider.createStoreWith({
 		reducer1: "reducer1",
 		reducer2: function(state, action){},
@@ -89,8 +89,8 @@ import ngRedux from 'ng-redux';
 
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
-	$ngReduxProvider.combineReducersFunc(myCombineReducers);
-	reducer3 = functtion(state, action){}
+	$ngReduxProvider.setCombineReducersFunc(myCombineReducers);
+	reducer3 = function(state, action){}
 	$ngReduxProvider.createStoreWith({
 		reducer1: "reducer1",
 		reducer2: function(state, action){},
@@ -99,7 +99,7 @@ angular.module('app', [ngRedux])
   });
 ```
 
-By passing `$ngReduxProvider.combineReducersFunc(myCombineReducers);`, ngRedux will use the new myCombineReducers function instead of the default one that comes with redux.
+By passing `$ngReduxProvider.setCombineReducersFunc(myCombineReducers);`, ngRedux will use the new myCombineReducers function instead of the default one that comes with redux.
 
 #### Usage
 
