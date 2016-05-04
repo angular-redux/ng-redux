@@ -1,4 +1,4 @@
-import 'babel-core/polyfill';
+//import 'babel-core/polyfill';
 import angular from 'angular';
 import ngRedux from 'ng-redux';
 import thunk from 'redux-thunk';
