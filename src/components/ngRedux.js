@@ -6,7 +6,8 @@ import digestMiddleware from './digestMiddleware';
 import assign from 'lodash.assign';
 import isArray from 'lodash.isarray';
 import isFunction from 'lodash.isfunction';
-import isObject from 'lodash.isobject';
+
+const isObject = x => typeof x === 'object';
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
@@ -48,14 +49,14 @@ export default function ngReduxProvider() {
 
     if(_reducerIsObject) {
       let reducersObj = {};
-      let reducKeys = Object.keys(_reducer); 
+      let reducKeys = Object.keys(_reducer);
 
       reducKeys.forEach((key) => {
-        if(typeof _reducer[key] === 'string') { 
+        if(typeof _reducer[key] === 'string') {
           reducersObj[key] = $injector.get(_reducer[key]);
         } else {
           reducersObj[key] = _reducer[key];
-        }  
+        }
       });
 
       _reducer = combineReducers(reducersObj);
@@ -66,7 +67,7 @@ export default function ngReduxProvider() {
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    store = _initialState 
+    store = _initialState
       ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
       : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 

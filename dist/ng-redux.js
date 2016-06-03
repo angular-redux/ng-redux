@@ -94,11 +94,11 @@
 
 	var _lodash6 = _interopRequireDefault(_lodash5);
 
-	var _lodash7 = __webpack_require__(26);
-
-	var _lodash8 = _interopRequireDefault(_lodash7);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var isObject = function isObject(x) {
+	  return (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === 'object';
+	};
 
 	function ngReduxProvider() {
 	  var _reducer = undefined;
@@ -108,12 +108,12 @@
 	  var _reducerIsObject = undefined;
 
 	  this.createStoreWith = function (reducer, middlewares, storeEnhancers, initialState) {
-	    (0, _invariant2.default)((0, _lodash6.default)(reducer) || (0, _lodash8.default)(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
+	    (0, _invariant2.default)((0, _lodash6.default)(reducer) || isObject(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
 
 	    (0, _invariant2.default)(!storeEnhancers || (0, _lodash4.default)(storeEnhancers), 'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.', typeof storeEnhancers === 'undefined' ? 'undefined' : _typeof(storeEnhancers));
 
 	    _reducer = reducer;
-	    _reducerIsObject = (0, _lodash8.default)(reducer);
+	    _reducerIsObject = isObject(reducer);
 	    _storeEnhancers = storeEnhancers;
 	    _middlewares = middlewares || [];
 	    _initialState = initialState;
@@ -388,6 +388,9 @@
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -922,11 +925,7 @@
 			if (Symbol.observable) {
 				result = Symbol.observable;
 			} else {
-				if (typeof Symbol['for'] === 'function') {
-					result = Symbol['for']('observable');
-				} else {
-					result = Symbol('observable');
-				}
+				result = Symbol('observable');
 				Symbol.observable = result;
 			}
 		} else {
