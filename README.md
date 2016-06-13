@@ -69,7 +69,7 @@ import reducer3 from './reducer3';
 
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
-	reducer3 = functtion(state, action){}
+	reducer3 = function(state, action){}
     $ngReduxProvider.createStoreWith({
 		reducer1: "reducer1",
 		reducer2: function(state, action){},
