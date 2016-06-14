@@ -31,8 +31,9 @@ describe('Connector', () => {
     expect(connect(() => ({})).bind(connect, () => {})).toNotThrow();
   });
 
-  it('Should throw when selector does not return a plain object', () => {
+  it('Should throw when selector does not return a plain object or a function', () => {
     expect(connect.bind(connect, state => state.foo)).toThrow();
+    expect(connect.bind(connect, state => state => state.foo)).toThrow();
   });
 
   it('Should extend target (Object) with selected state once directly after creation', () => {
@@ -65,6 +66,20 @@ describe('Connector', () => {
 
     expect(targetObj.baz).toBe(0);
 
+  });
+
+  it('should update the target (Object) if a function is returned instead of an object', () => {
+    connect(state => state => state)(targetObj);
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(targetObj.baz).toBe(5);
+
+    targetObj.baz = 0;
+
+    //this should not replace our mutation, since the state didn't change
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(targetObj.baz).toBe(0);
   });
 
   it('Should extend target (object) with actionCreators', () => {
