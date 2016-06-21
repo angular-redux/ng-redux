@@ -4,9 +4,14 @@ import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
 
 import assign from 'lodash.assign';
+import curry from 'lodash.curry';
 import isArray from 'lodash.isarray';
 import isFunction from 'lodash.isfunction';
-import isObject from 'lodash.isobject';
+import map from 'lodash.map';
+
+const typeIs = curry((type, val) => typeof val === type);
+const isObject = typeIs('object');
+const isString = typeIs('string');
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
@@ -36,37 +41,34 @@ export default function ngReduxProvider() {
   };
 
   this.$get = ($injector) => {
-    let store, resolvedMiddleware = [];
+    const resolveMiddleware = middleware => isString(middleware)
+      ? $injector.get(middleware)
+      : middleware;
 
-    for(let middleware of _middlewares) {
-      if(typeof middleware === 'string') {
-        resolvedMiddleware.push($injector.get(middleware));
-      } else {
-        resolvedMiddleware.push(middleware);
-      }
-    }
+    const resolvedMiddleware = map(_middlewares, resolveMiddleware);
 
     if(_reducerIsObject) {
-      let reducersObj = {};
-      let reducKeys = Object.keys(_reducer); 
+      const getReducerKey = key => isString(key)
+        ? $injector.get(_reducer[key])
+        : _reducer[key];
 
-      reducKeys.forEach((key) => {
-        if(typeof _reducer[key] === 'string') { 
-          reducersObj[key] = $injector.get(_reducer[key]);
-        } else {
-          reducersObj[key] = _reducer[key];
-        }  
-      });
+      const resolveReducerKey = (result, key) => assign({}, result,
+        { [key]: getReducerKey(key) }
+      );
+
+      const reducersObj = Object
+        .keys(_reducer)
+        .reduce(resolveReducerKey, {});
 
       _reducer = combineReducers(reducersObj);
     }
 
-    let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
+    const finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
 
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    store = _initialState 
+    const store = _initialState
       ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
       : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
