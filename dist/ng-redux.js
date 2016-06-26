@@ -139,7 +139,7 @@
 	    if (_reducerIsObject) {
 	      (function () {
 	        var getReducerKey = function getReducerKey(key) {
-	          return isString(key) ? $injector.get(_reducer[key]) : _reducer[key];
+	          return isString(_reducer[key]) ? $injector.get(_reducer[key]) : _reducer[key];
 	        };
 
 	        var resolveReducerKey = function resolveReducerKey(result, key) {

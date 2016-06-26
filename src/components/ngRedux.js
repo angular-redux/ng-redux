@@ -48,7 +48,7 @@ export default function ngReduxProvider() {
     const resolvedMiddleware = map(_middlewares, resolveMiddleware);
 
     if(_reducerIsObject) {
-      const getReducerKey = key => isString(key)
+      const getReducerKey = key => isString(_reducer[key])
         ? $injector.get(_reducer[key])
         : _reducer[key];
 
