@@ -13,7 +13,7 @@ const defaultMapDispatchToTarget = dispatch => ({dispatch});
 export default function Connector(store) {
   return (mapStateToTarget, mapDispatchToTarget) => {
 
-    const finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
+    let finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
     const finalMapDispatchToTarget = isPlainObject(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
@@ -29,7 +29,13 @@ export default function Connector(store) {
       'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget
       );
 
-    let slice = getStateSlice(store.getState(), finalMapStateToTarget);
+    let slice = getStateSlice(store.getState(), finalMapStateToTarget, false);
+    const isFactory = isFunction(slice);
+
+    if (isFactory) {
+      finalMapStateToTarget = slice;
+      slice = getStateSlice(store.getState(), finalMapStateToTarget);
+    }
 
     const boundActionCreators = finalMapDispatchToTarget(store.dispatch);
 
@@ -64,14 +70,22 @@ function updateTarget(target, StateSlice, dispatch) {
   }
 }
 
-function getStateSlice(state, mapStateToScope) {
+function getStateSlice(state, mapStateToScope, shouldReturnObject = true) {
   const slice = mapStateToScope(state);
 
-  invariant(
-    isPlainObject(slice),
-    '`mapStateToScope` must return an object. Instead received %s.',
-    slice
-    );
+  if (shouldReturnObject) {
+    invariant(
+      isPlainObject(slice),
+      '`mapStateToScope` must return an object. Instead received %s.',
+      slice
+      );
+  } else {
+    invariant(
+      isPlainObject(slice) || isFunction(slice),
+      '`mapStateToScope` must return an object or a function. Instead received %s.',
+      slice
+      );
+  }
 
   return slice;
 }

@@ -131,7 +131,7 @@ Creates the Redux store, and allow `connect()` to access it.
 Connects an Angular component to Redux.
 
 #### Arguments
-* `mapStateToTarget` \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object, and it will be merged into `target`. If you have a component which simply triggers actions without needing any state you can pass null to `mapStateToTarget`.
+* `mapStateToTarget` \(*Function*): connect will subscribe to Redux store updates. Any time it updates, mapStateToTarget will be called. Its result must be a plain object or a function returning a plaing object, and it will be merged into `target`. If you have a component which simply triggers actions without needing any state you can pass null to `mapStateToTarget`.
 * [`mapDispatchToTarget`] \(*Object* or *Function*): Optional. If an object is passed, each function inside it will be assumed to be a Redux action creator. An object with the same function names, but bound to a Redux store, will be merged onto `target`. If a function is passed, it will be given `dispatch`. It’s up to you to return an object that somehow uses `dispatch` to bind action creators in your own way. (Tip: you may use the [`bindActionCreators()`](http://gaearon.github.io/redux/docs/api/bindActionCreators.html) helper from Redux.).
 
 *You then need to invoke the function a second time, with `target` as parameter:*
@@ -148,7 +148,7 @@ connect(this.mapState, this.mapDispatch)((selectedState, actions) => {/* ... */}
 Returns a *Function* allowing to unsubscribe from further store updates.
 
 #### Remarks
-* The `mapStateToTarget` function takes a single argument of the entire Redux store’s state and returns an object to be passed as props. It is often called a selector. Use reselect to efficiently compose selectors and compute derived data.
+* The `mapStateToTarget` function takes a single argument of the entire Redux store’s state and returns an object to be passed as props. It is often called a selector. Use reselect to efficiently compose selectors and compute derived data. You can also choose to use per-instance memoization by having a `mapStateToTarget` function returning a function of state, see [Sharing selectors across multiple components](https://github.com/reactjs/reselect#user-content-sharing-selectors-with-props-across-multiple-components)
 
 
 
