@@ -47,6 +47,12 @@ export default function ngReduxProvider() {
 
     const resolvedMiddleware = map(_middlewares, resolveMiddleware);
 
+    const resolveStoreEnhancer = storeEnhancer => isString(storeEnhancer)
+      ? $injector.get(storeEnhancer)
+      : storeEnhancer;
+
+    const resolvedStoreEnhancer = map(_storeEnhancers, resolveStoreEnhancer);
+
     if(_reducerIsObject) {
       const getReducerKey = key => isString(_reducer[key])
         ? $injector.get(_reducer[key])
@@ -63,7 +69,7 @@ export default function ngReduxProvider() {
       _reducer = combineReducers(reducersObj);
     }
 
-    const finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
+    const finalCreateStore = resolvedStoreEnhancer ? compose(...resolvedStoreEnhancer)(createStore) : createStore;
 
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
