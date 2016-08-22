@@ -7,6 +7,7 @@ describe('Utils', () => {
 
       const fakeStore = {
           asyncReducers: {},
+          fixedReducers: {},
           replaceReducer: (newReducer) => {
             return newReducer;
           }
@@ -24,6 +25,7 @@ describe('Utils', () => {
 
       const fakeStore = {
           asyncReducers: { test: 'a test' },
+          fixedReducers: {},
           replaceReducer: (newReducer) => {
             return newReducer;
           }
