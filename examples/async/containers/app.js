@@ -10,7 +10,7 @@ export default function app() {
 
 class AppController {
 
-  constructor($ngRedux, $scope, AsyncActions) {
+  constructor($ngRedux, AsyncActions) {
     const unsubscribe = $ngRedux.connect(this.mapStateToThis, AsyncActions)((selectedState, actions) => {
       this.componentWillReceiveStateAndActions(selectedState, actions);
       Object.assign(this, selectedState, actions);
