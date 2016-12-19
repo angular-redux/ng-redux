@@ -191,7 +191,11 @@ See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redu
 See [ng-redux-router](https://github.com/amitport/ng-redux-router) to make ng-redux and angular-route work together.
 
 ## Using DevTools
-In order to use Redux DevTools with your angular app, you need to install [react](https://www.npmjs.com/package/react), [react-redux](https://www.npmjs.com/package/react-redux) and [redux-devtools](https://www.npmjs.com/package/redux-devtools) as development dependencies.
+There are two options for using Redux DevTools with your angular app.  The first option is to use the [redux-devtools package] (https://www.npmjs.com/package/redux-devtools), 
+and the other option is to use the [Redux DevTools Extension] (https://github.com/zalmoxisus/redux-devtools-extension#usage).  The Redux DevTools Extension does not
+require adding the react, react-redux, or redux-devtools packages to your project.
+
+To use the redux-devtools package, you need to install [react](https://www.npmjs.com/package/react), [react-redux](https://www.npmjs.com/package/react-redux) and [redux-devtools](https://www.npmjs.com/package/redux-devtools) as development dependencies.
 
 ```JS
 [...]
@@ -203,7 +207,7 @@ angular.module('app', ['ngRedux'])
   .config(($ngReduxProvider) => {
       $ngReduxProvider.createStoreWith(rootReducer, [thunk], [devTools()]);
     })
-  .run(($ngRedux, $rootScope) => {
+  .run(($ngRedux, $rootScope, $timeout) => {
     React.render(
       <App store={ $ngRedux }/>,
       document.getElementById('devTools')
@@ -211,8 +215,8 @@ angular.module('app', ['ngRedux'])
     
     //To reflect state changes when disabling/enabling actions via the monitor
     //there is probably a smarter way to achieve that
-    $ngRedux.subscribe(_ => {
-        setTimeout($rootScope.$apply, 100);
+    $ngRedux.subscribe(() => {
+        $timeout(() => {$rootScope.$apply(() => {})}, 100);
     });
   });
   
@@ -236,6 +240,22 @@ angular.module('app', ['ngRedux'])
     </div>
     <div id="devTools"></div>
 </body>
+```
+
+To use the Redux DevTools extension, you must first make sure that you have installed the [Redux DevTools Extension](https://github.com/zalmoxisus/redux-devtools-extension#installation).
+
+```JS
+angular.module('app', ['ngRedux'])
+  .config(($ngReduxProvider) => {
+      $ngReduxProvider.createStoreWith(rootReducer, [thunk], [window.__REDUX_DEVTOOLS_EXTENSION__()]);
+    })
+  .run(($ngRedux, $rootScope, $timeout) => { 
+    //To reflect state changes when disabling/enabling actions via the monitor
+    //there is probably a smarter way to achieve that
+    $ngRedux.subscribe(() => {
+        $timeout(() => {$rootScope.$apply(() => {})}, 100);
+    });
+  });
 ```
 
 ## Additional Resources
