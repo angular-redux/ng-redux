@@ -137,8 +137,8 @@
 	  };
 
 	  this.injectReducers = function (reducers) {
-	    Object.keys(reducer).forEach(function (key) {
-	      return reducers[key] = reducer[key];
+	    Object.keys(reducers).forEach(function (key) {
+	      return _reducers[key] = reducers[key];
 	    });
 	  };
 

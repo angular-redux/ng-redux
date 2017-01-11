@@ -46,7 +46,7 @@ export default function ngReduxProvider() {
   }
 
   this.injectReducers = (reducers) => {
-    Object.keys(reducer).forEach(key => reducers[key] = reducer[key]);
+    Object.keys(reducers).forEach(key => _reducers[key] = reducers[key]);
   };
 
   this.$get = ($injector) => {
