@@ -15,6 +15,7 @@ const isString = typeIs('string');
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
+  let _reducers = {};
   let _middlewares = undefined;
   let _storeEnhancers = undefined;
   let _initialState = undefined;
@@ -38,6 +39,14 @@ export default function ngReduxProvider() {
     _storeEnhancers = storeEnhancers
     _middlewares = middlewares || [];
     _initialState = initialState;
+  };
+
+  this.createStoreWithInjected = (middlewares, storeEnhancers, initialState) => {
+    return this.createStoreWith(_reducers, middlewares, storeEnhancers, initialState);
+  }
+
+  this.injectReducers = (reducers) => {
+    Object.keys(reducer).forEach(key => reducers[key] = reducer[key]);
   };
 
   this.$get = ($injector) => {
