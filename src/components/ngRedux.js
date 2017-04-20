@@ -1,6 +1,6 @@
 import Connector from './connector';
 import invariant from 'invariant';
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import digestMiddleware from './digestMiddleware';
 
 import assign from 'lodash.assign';
@@ -53,7 +53,7 @@ export default function ngReduxProvider() {
 
     const resolvedStoreEnhancer = map(_storeEnhancers, resolveStoreEnhancer);
 
-    if(_reducerIsObject) {
+    if (_reducerIsObject) {
       const getReducerKey = key => isString(_reducer[key])
         ? $injector.get(_reducer[key])
         : _reducer[key];
@@ -78,7 +78,8 @@ export default function ngReduxProvider() {
       ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
       : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
-    return assign({}, store, { connect: Connector(store) });
+    store.connect = Connector(store);
+    return store;
   };
 
   this.$get.$inject = ['$injector'];
