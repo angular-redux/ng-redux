@@ -1,4 +1,3 @@
-> ### Currently unmaintained! Looking for contributors: https://github.com/angular-redux/ng-redux/issues/140
 # ng-redux
 ###### Angular bindings for [Redux](https://github.com/gaearon/redux).
 
