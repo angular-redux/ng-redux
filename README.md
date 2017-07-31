@@ -41,7 +41,7 @@ Add the following script tag to your html:
 
 #### Initialization
 
-You can either pass a function or an object to `createStoreWith`.
+You can either pass a function or an object to `createStoreWith`, or load your reducers in a dynamic way.
 
 With a function:
 
@@ -78,6 +78,57 @@ angular.module('app', [ngRedux])
   });
 ```
 In this example `reducer1` will be resolved using angular's DI after the config phase.
+
+Dynamic load:
+
+_children component 1:_
+```JS
+import reducer2 from './reducer2';
+import reducer3 from './reducer3';
+import ngRedux from 'ng-redux';
+
+angular.module('app.Child1', [ngRedux])
+.config(($ngReduxProvider) => {
+	
+  $ngReduxProvider.injectReducers({
+    reducer1: "reducer1",
+    reducer2: reducer2
+  });
+
+  $ngReduxProvider.injectReducers({
+    reducer3: reducer3
+  });
+});
+```
+
+_children component 2:_
+```JS
+import reducer4 from './reducer4';
+import ngRedux from 'ng-redux';
+
+angular.module('app.Child2', [ngRedux])
+.config(($ngReduxProvider) => {
+  $ngReduxProvider.injectReducers({
+    reducer4: reducer4
+  });
+});
+```
+
+_Root Component:_
+```JS
+import reducer4 from './reducer4';
+import ngRedux from 'ng-redux';
+
+import child1 from './component/child1';
+import child2 from './component/child2';
+
+angular.module('app', [ngRedux, child1, child2])
+.config(($ngReduxProvider) => {
+  $ngReduxProvider.createStoreWithInjected(['promiseMiddleware', loggingMiddleware]);
+});
+```
+
+Because in this dependency tree the `app` component is the last `.config` that ran, `createStoreWithInjected` will create the store with all the dynamic reducers loaded
 
 #### Usage
 
@@ -121,6 +172,22 @@ Creates the Redux store, and allow `connect()` to access it.
 
 #### Arguments: 
 * `reducer` \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
+* [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
+* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
+* [`initialState`] \(*Object*): Optional, the initial state of your Redux store.
+
+### `injectReducers(reducers)`
+
+Inject Reducers into the dynamic load.
+
+#### Arguments: 
+* `reducers` \(*Object*): Object with name and reducer, in the same way that `redux.combineReducer` accepts.
+
+### `createStoreWithInjected(middlewares, storeEnhancers, initialState)`
+
+Creates the redux store, with the combined reducers loaded with `injectReducers`.
+
+#### Arguments: 
 * [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
 * [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
 * [`initialState`] \(*Object*): Optional, the initial state of your Redux store.
