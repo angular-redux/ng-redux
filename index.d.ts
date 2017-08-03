@@ -28,7 +28,7 @@ export interface INgRedux {
 }
 
 export interface INgReduxProvider {
-    createStoreWith(reducer: Reducer, middlewares?: Array<Middleware | string>, storeEnhancers?: Function[]): void;
+    createStoreWith(reducer: Reducer, middlewares?: Array<Middleware | string>, storeEnhancers?: Function[], initialState?: any): void;
 }
 
 export var ngRedux: string;
