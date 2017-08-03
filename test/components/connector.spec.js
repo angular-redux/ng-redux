@@ -3,7 +3,8 @@ let sinon = require('sinon');
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
 import isFunction from 'lodash.isfunction';
-import assign from 'lodash.assign';
+
+const assign = Object.assign;
 
 describe('Connector', () => {
   let store;

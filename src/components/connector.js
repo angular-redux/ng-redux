@@ -5,8 +5,8 @@ import invariant from 'invariant';
 import isPlainObject from 'lodash.isplainobject';
 import isFunction from 'lodash.isfunction';
 import isObject from 'lodash.isobject';
-import assign from 'lodash.assign';
 
+const assign = Object.assign;
 const defaultMapStateToTarget = () => ({});
 const defaultMapDispatchToTarget = dispatch => ({dispatch});
 
