@@ -1,0 +1,22 @@
+<div>
+  <ngr-picker value="app.selectedReddit"
+          on-change="app.handleChange"
+          options="app.options">
+  </ngr-picker>
+  <p>
+    <span ng-show="app.lastUpdated">
+      Last updated at {{ app.lastUpdated | date:'mediumTime' }}.
+    </span>
+    <a href="#"
+      ng-show="!app.isFetching"
+      ng-click="app.handleRefreshClick()">
+      Refresh
+    </a>
+  </p>
+  <h2 ng-show="app.isFetching && app.posts.length === 0">Loading...</h2>
+  <h2 ng-show="!app.isFetching && app.posts.length === 0">Empty.</h2>
+  <div ng-show="app.posts.length > 0"
+    ng-style="{ opacity: app.isFetching ? 0.5 : 1 }">
+    <ngr-posts posts="app.posts"></ngr-posts>
+  </div>
+</div>
