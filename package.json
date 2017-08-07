@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "invariant": "^2.1.0",
-    "lodash.assign": "^3.2.0",
     "lodash.curry": "^4.0.1",
     "lodash.isarray": "^3.0.4",
     "lodash.isfunction": "^3.0.6",
