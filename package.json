@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:lib && npm run build:min && npm run build:max",
     "build:lib": "rm -rf lib && babel src --out-dir lib",
-    "build:min": "webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
+    "build:min": "webpack --optimize-minimize --define process.env.NODE_ENV=\"'production'\" lib/index.js dist/ng-redux.min.js",
     "build:max": "webpack lib/index.js dist/ng-redux.js",
     "test": "mocha --compilers js:babel-register --recursive"
   },
