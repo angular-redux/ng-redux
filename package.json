@@ -5,9 +5,9 @@
   "main": "./lib/index.js",
   "scripts": {
     "build": "npm run build:lib && npm run build:min && npm run build:max",
-    "build:lib": "rm -rf lib && `npm bin`/babel src --out-dir lib",
-    "build:min": "./node_modules/.bin/webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
-    "build:max": "./node_modules/.bin/webpack lib/index.js dist/ng-redux.js",
+    "build:lib": "rm -rf lib && babel src --out-dir lib",
+    "build:min": "webpack --optimize-minimize lib/index.js dist/ng-redux.min.js",
+    "build:max": "webpack lib/index.js dist/ng-redux.js",
     "test": "mocha --compilers js:babel-register --recursive"
   },
   "repository": {
