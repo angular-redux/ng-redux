@@ -1,8 +1,7 @@
-//import 'babel-core/polyfill';
+import { createLogger } from 'redux-logger';
 import angular from 'angular';
 import ngRedux from 'ng-redux';
 import thunk from 'redux-thunk';
-import createLogger from 'redux-logger';
 import rootReducer from './reducers';
 import asyncService from './actions/asyncService';
 import app from './containers/app';

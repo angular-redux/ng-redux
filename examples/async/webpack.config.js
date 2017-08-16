@@ -13,21 +13,20 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'ngRedux Async',
       template: './index.html',
       inject: 'body'
     }),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       exclude: /node_modules/,
     },
     {
       test: /\.html$/,
-      loader: 'html'
+      loader: 'html-loader'
     }]
   }
 };
