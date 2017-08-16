@@ -2,13 +2,26 @@
   "name": "ng-redux",
   "version": "3.4.1",
   "description": "Redux bindings for Angular.js",
-  "main": "./lib/index.js",
+  "browser": "dist/ng-redux.js",
+  "main": "lib/ng-redux.js",
+  "module": "es/ng-redux.js",
+  "typings": "./index.d.ts",
+  "files": [
+    "dist",
+    "lib",
+    "es",
+    "src",
+    "index.d.ts"
+  ],
   "scripts": {
-    "build": "npm run build:lib && npm run build:min && npm run build:max",
-    "build:lib": "rm -rf lib && babel src --out-dir lib",
-    "build:min": "webpack --optimize-minimize --define process.env.NODE_ENV=\"'production'\" lib/index.js dist/ng-redux.min.js",
-    "build:max": "webpack lib/index.js dist/ng-redux.js",
-    "test": "mocha --compilers js:babel-register --recursive"
+    "clean": "rimraf lib dist es",
+    "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/ng-redux.js",
+    "build:es": "cross-env NODE_ENV=es rollup -c -o es/ng-redux.js",
+    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/ng-redux.js",
+    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/ng-redux.min.js",
+    "build": "yarn run build:commonjs && yarn run build:es && yarn run build:umd && yarn run build:umd:min",
+    "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive",
+    "prepublish": "yarn run clean && yarn test && yarn run build"
   },
   "repository": {
     "type": "git",
@@ -21,30 +34,31 @@
   },
   "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
   "devDependencies": {
-    "babel-cli": "^6.4.0",
-    "babel-core": "^6.4.0",
-    "babel-loader": "^6.2.1",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-es2015-loose": "^7.0.0",
-    "babel-register": "^6.3.13",
-    "expect": "^1.8.0",
-    "mocha": "^2.2.5",
-    "sinon": "^1.16.1",
-    "webpack": "^1.12.11",
-    "semantic-release": "^4.3.5"
-  },
-  "peerDependencies": {
-    "redux": "^3.0.0"
+    "babel-core": "^6.25.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
+    "cross-env": "^5.0.5",
+    "expect": "^1.20.2",
+    "mocha": "^3.5.0",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.47.4",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-uglify": "^2.0.1",
+    "semantic-release": "^4.3.5",
+    "sinon": "^3.2.0"
   },
   "dependencies": {
-    "invariant": "^2.1.0",
-    "lodash.curry": "^4.0.1",
-    "lodash.isarray": "^3.0.4",
-    "lodash.isfunction": "^3.0.6",
+    "invariant": "^2.2.2",
+    "lodash.curry": "^4.1.1",
+    "lodash.isarray": "^4.0.0",
+    "lodash.isfunction": "^3.0.8",
     "lodash.isobject": "^3.0.2",
-    "lodash.isplainobject": "^3.2.0",
-    "lodash.map": "^4.4.0",
-    "redux": "^3.0.0"
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.map": "^4.6.0",
+    "redux": "^3.7.2"
   },
   "czConfig": {
     "path": "node_modules/cz-conventional-changelog"
