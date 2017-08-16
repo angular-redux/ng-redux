@@ -14,27 +14,22 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'ngRedux Counter',
       template: './index.html',
       inject: 'body'
     }),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   devtool: 'source-map',
   module: {
     loaders: [
       {
         test: /\.js$/,
-        loader: "babel",
-        exclude: /node_modules/,
-        query:
-        {
-          presets:['es2015','react']
-        }
+        loader: "babel-loader",
+        exclude: /node_modules/
       },
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: 'html-loader'
       }
     ]
   }
