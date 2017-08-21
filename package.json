@@ -19,9 +19,9 @@
     "build:es": "cross-env NODE_ENV=es rollup -c -o es/ng-redux.js",
     "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/ng-redux.js",
     "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/ng-redux.min.js",
-    "build": "yarn run build:commonjs && yarn run build:es && yarn run build:umd && yarn run build:umd:min",
+    "build": "$npm_execpath run build:commonjs && $npm_execpath run build:es && $npm_execpath run build:umd && $npm_execpath run build:umd:min",
     "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive",
-    "prepublish": "yarn run clean && yarn test && yarn run build"
+    "prepublish": "$npm_execpath run clean && $npm_execpath test && $npm_execpath run build"
   },
   "repository": {
     "type": "git",
