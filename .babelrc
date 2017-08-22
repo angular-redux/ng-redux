@@ -1,3 +1,20 @@
 {
-  "presets": ["es2015-loose"]
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": ["env"]
+    },
+    "production": {
+      "plugins": [
+        "external-helpers"
+      ]
+    }
+  }
 }

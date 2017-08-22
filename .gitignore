@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 .DS_Store
 lib
+es
 coverage
 *.tgz
 examples/**/dist
