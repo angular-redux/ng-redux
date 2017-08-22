@@ -20,7 +20,7 @@
     "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/ng-redux.js",
     "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/ng-redux.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
-    "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive",
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive",
     "prepublish": "npm run clean && npm test && npm run build"
   },
   "repository": {
