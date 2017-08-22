@@ -26,7 +26,9 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 ```js
 npm install --save ng-redux
 ```
-#### bower
+#### bower (deprecated)
+**Warning!** ng-redux will stop being published to bower when version 4.0.0 hits. Bower recommends using yarn and webpack as an alternative for new projects.
+
 ```js
 bower install --save ng-redux
 ```
