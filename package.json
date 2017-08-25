@@ -1,6 +1,6 @@
 {
   "name": "ng-redux",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "description": "Redux bindings for Angular.js",
   "browser": "dist/ng-redux.js",
   "main": "lib/ng-redux.js",
