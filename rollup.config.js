@@ -15,7 +15,6 @@ if (env === 'es' || env === 'cjs') {
   config.external = [
     'invariant',
     'lodash.curry',
-    'lodash.isarray',
     'lodash.isfunction',
     'lodash.isobject',
     'lodash.isplainobject',
