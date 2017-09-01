@@ -12,6 +12,7 @@ const config = {
 
 if (env === 'es' || env === 'cjs') {
   config.format = env;
+  config.sourceMap = true;
   config.external = [
     'invariant',
     'lodash.curry',
@@ -29,6 +30,7 @@ if (env === 'es' || env === 'cjs') {
 if (env === 'development' || env === 'production') {
   config.format = 'umd';
   config.moduleName = 'NgRedux';
+  config.sourceMap = true;
   config.plugins.push(
     nodeResolve({
       jsnext: true,
