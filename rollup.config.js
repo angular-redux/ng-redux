@@ -19,6 +19,7 @@ if (env === 'es' || env === 'cjs') {
     'lodash.isobject',
     'lodash.isplainobject',
     'lodash.map',
+    'object-assign',
     'redux',
   ];
   config.plugins.push(

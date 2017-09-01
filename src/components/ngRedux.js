@@ -3,6 +3,7 @@ import invariant from 'invariant';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
 
+import assign from 'object-assign';
 import curry from 'lodash.curry';
 import isFunction from 'lodash.isfunction';
 import map from 'lodash.map';
@@ -12,7 +13,6 @@ const isArray = Array.isArray;
 const typeIs = curry((type, val) => typeof val === type);
 const isObject = typeIs('object');
 const isString = typeIs('string');
-const assign  = Object.assign;
 
 export default function ngReduxProvider() {
   let _reducer = undefined;
