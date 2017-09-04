@@ -30,15 +30,15 @@ if (env === 'development' || env === 'production') {
   config.format = 'umd';
   config.moduleName = 'NgRedux';
   config.plugins.push(
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
     nodeResolve({
       jsnext: true,
     }),
     commonjs(),
     babel({
       exclude: 'node_modules/**'
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify(env)
     })
   )
 }
