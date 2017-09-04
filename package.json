@@ -34,7 +34,7 @@
   "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
   "devDependencies": {
     "babel-core": "^6.25.0",
-    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "cross-env": "^5.0.5",
     "expect": "^1.20.2",
@@ -50,6 +50,7 @@
     "sinon": "^3.2.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "invariant": "^2.2.2",
     "lodash.curry": "^4.1.1",
     "lodash.isfunction": "^3.0.8",

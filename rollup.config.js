@@ -40,6 +40,7 @@ if (env === 'development' || env === 'production') {
     }),
     commonjs(),
     babel({
+      runtimeHelpers: true,
       exclude: 'node_modules/**'
     })
   )
