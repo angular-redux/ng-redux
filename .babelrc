@@ -13,7 +13,7 @@
     },
     "production": {
       "plugins": [
-        "external-helpers"
+        "transform-runtime"
       ]
     }
   }
