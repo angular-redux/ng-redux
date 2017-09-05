@@ -997,7 +997,7 @@ function isPlainObject$2(value) {
     Ctor instanceof Ctor && funcToString$1.call(Ctor) == objectCtorString$1);
 }
 
-var index$2 = isPlainObject$2;
+var lodash_isplainobject = isPlainObject$2;
 
 /**
  * lodash 3.0.8 (Custom Build) <https://lodash.com/>
@@ -1073,7 +1073,7 @@ function isObject$1(value) {
   return !!value && (type == 'object' || type == 'function');
 }
 
-var index$3 = isFunction;
+var lodash_isfunction = isFunction;
 
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
@@ -1111,7 +1111,7 @@ function isObject$2(value) {
   return !!value && (type == 'object' || type == 'function');
 }
 
-var index$4 = isObject$2;
+var lodash_isobject = isObject$2;
 
 var assign$1 = Object.assign;
 var defaultMapStateToTarget = function defaultMapStateToTarget() {
@@ -1126,14 +1126,14 @@ function Connector(store) {
 
     var finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
-    var finalMapDispatchToTarget = index$2(mapDispatchToTarget) ? wrapActionCreators(mapDispatchToTarget) : mapDispatchToTarget || defaultMapDispatchToTarget;
+    var finalMapDispatchToTarget = lodash_isplainobject(mapDispatchToTarget) ? wrapActionCreators(mapDispatchToTarget) : mapDispatchToTarget || defaultMapDispatchToTarget;
 
-    invariant_1(index$3(finalMapStateToTarget), 'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget);
+    invariant_1(lodash_isfunction(finalMapStateToTarget), 'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget);
 
-    invariant_1(index$2(finalMapDispatchToTarget) || index$3(finalMapDispatchToTarget), 'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget);
+    invariant_1(lodash_isplainobject(finalMapDispatchToTarget) || lodash_isfunction(finalMapDispatchToTarget), 'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget);
 
     var slice = getStateSlice(store.getState(), finalMapStateToTarget, false);
-    var isFactory = index$3(slice);
+    var isFactory = lodash_isfunction(slice);
 
     if (isFactory) {
       finalMapStateToTarget = slice;
@@ -1144,7 +1144,7 @@ function Connector(store) {
 
     return function (target) {
 
-      invariant_1(index$3(target) || index$4(target), 'The target parameter passed to connect must be a Function or a object.');
+      invariant_1(lodash_isfunction(target) || lodash_isobject(target), 'The target parameter passed to connect must be a Function or a object.');
 
       //Initial update
       updateTarget(target, slice, boundActionCreators);
@@ -1162,7 +1162,7 @@ function Connector(store) {
 }
 
 function updateTarget(target, StateSlice, dispatch) {
-  if (index$3(target)) {
+  if (lodash_isfunction(target)) {
     target(StateSlice, dispatch);
   } else {
     assign$1(target, StateSlice, dispatch);
@@ -1175,9 +1175,9 @@ function getStateSlice(state, mapStateToScope) {
   var slice = mapStateToScope(state);
 
   if (shouldReturnObject) {
-    invariant_1(index$2(slice), '`mapStateToScope` must return an object. Instead received %s.', slice);
+    invariant_1(lodash_isplainobject(slice), '`mapStateToScope` must return an object. Instead received %s.', slice);
   } else {
-    invariant_1(index$2(slice) || index$3(slice), '`mapStateToScope` must return an object or a function. Instead received %s.', slice);
+    invariant_1(lodash_isplainobject(slice) || lodash_isfunction(slice), '`mapStateToScope` must return an object or a function. Instead received %s.', slice);
   }
 
   return slice;
@@ -2433,45 +2433,9 @@ function identity(value) {
 // Assign default placeholders.
 curry.placeholder = {};
 
-var index$5 = curry;
+var lodash_curry$1 = curry;
 
-/**
- * lodash 4.0.0 (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright 2012-2016 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <https://lodash.com/license>
- */
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @type Function
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-var index$6 = isArray;
-
-var index$7 = createCommonjsModule(function (module, exports) {
+var lodash_map = createCommonjsModule(function (module, exports) {
 /**
  * lodash (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -4846,7 +4810,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var typeIs = index$5(function (type, val) {
+var isArray = Array.isArray;
+
+var typeIs = lodash_curry$1(function (type, val) {
   return (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === type;
 });
 var isObject = typeIs('object');
@@ -4861,9 +4827,9 @@ function ngReduxProvider() {
   var _reducerIsObject = undefined;
 
   this.createStoreWith = function (reducer, middlewares, storeEnhancers, initialState) {
-    invariant_1(index$3(reducer) || isObject(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
+    invariant_1(lodash_isfunction(reducer) || isObject(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
 
-    invariant_1(!storeEnhancers || index$6(storeEnhancers), 'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.', typeof storeEnhancers === 'undefined' ? 'undefined' : _typeof(storeEnhancers));
+    invariant_1(!storeEnhancers || isArray(storeEnhancers), 'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.', typeof storeEnhancers === 'undefined' ? 'undefined' : _typeof(storeEnhancers));
 
     _reducer = reducer;
     _reducerIsObject = isObject(reducer);
@@ -4877,13 +4843,13 @@ function ngReduxProvider() {
       return isString(middleware) ? $injector.get(middleware) : middleware;
     };
 
-    var resolvedMiddleware = index$7(_middlewares, resolveMiddleware);
+    var resolvedMiddleware = lodash_map(_middlewares, resolveMiddleware);
 
     var resolveStoreEnhancer = function resolveStoreEnhancer(storeEnhancer) {
       return isString(storeEnhancer) ? $injector.get(storeEnhancer) : storeEnhancer;
     };
 
-    var resolvedStoreEnhancer = index$7(_storeEnhancers, resolveStoreEnhancer);
+    var resolvedStoreEnhancer = lodash_map(_storeEnhancers, resolveStoreEnhancer);
 
     if (_reducerIsObject) {
       var getReducerKey = function getReducerKey(key) {
@@ -4912,8 +4878,9 @@ function ngReduxProvider() {
   this.$get.$inject = ['$injector'];
 }
 
-var index$1 = angular.module('ngRedux', []).provider('$ngRedux', ngReduxProvider).name;
+var index = angular.module('ngRedux', []).provider('$ngRedux', ngReduxProvider).name;
 
-return index$1;
+return index;
 
 })));
+//# sourceMappingURL=ng-redux.js.map
