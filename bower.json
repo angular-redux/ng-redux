@@ -1,6 +1,6 @@
 {
   "name": "ng-redux",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "homepage": "http://github.com/angular-redux/ng-redux",
   "authors": [
     "William Buchwalter <wbuchwalter@gmail.com> (http://github.com/wbuchwalter)"
