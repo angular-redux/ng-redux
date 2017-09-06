@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
+import { dependencies } from './package.json'
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -10,20 +11,16 @@ const config = {
   plugins: [],
 };
 
+const externals = Object.keys(dependencies).join('|');
+
 if (env === 'es' || env === 'cjs') {
   config.format = env;
   config.sourceMap = true;
-  config.external = [
-    'invariant',
-    'lodash.curry',
-    'lodash.isfunction',
-    'lodash.isobject',
-    'lodash.isplainobject',
-    'lodash.map',
-    'redux',
-  ];
+  config.external = id => RegExp(`^(${externals})(\/.*)?$`).test(id);
   config.plugins.push(
-    babel()
+    babel({
+      runtimeHelpers: true,
+    })
   )
 }
 
