@@ -2,6 +2,7 @@ import Connector from './connector';
 import invariant from 'invariant';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
+import {addReducer, removeReducer} from '../utils/dynamicReducers';
 
 import curry from 'lodash.curry';
 import isFunction from 'lodash.isfunction';
@@ -20,6 +21,7 @@ export default function ngReduxProvider() {
   let _storeEnhancers = undefined;
   let _initialState = undefined;
   let _reducerIsObject = undefined;
+  let _fixedReducers = undefined;
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
@@ -63,7 +65,7 @@ export default function ngReduxProvider() {
         { [key]: getReducerKey(key) }
       );
 
-      const reducersObj = Object
+      const reducersObj = _fixedReducers = Object
         .keys(_reducer)
         .reduce(resolveReducerKey, {});
 
@@ -76,10 +78,14 @@ export default function ngReduxProvider() {
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
     const store = _initialState
-      ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
-      : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
+      ? assign({ asyncReducers: {}, fixedReducers: _fixedReducers }, applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState))
+      : assign({ asyncReducers: {}, fixedReducers: _fixedReducers }, applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer));
 
-    return assign({}, store, { connect: Connector(store) });
+    return assign({}, store, {
+      addReducer: addReducer(store),
+      connect: Connector(store),
+      removeReducer: removeReducer(store)
+    });
   };
 
   this.$get.$inject = ['$injector'];
