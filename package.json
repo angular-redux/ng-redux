@@ -6,7 +6,6 @@
   "module": "es/ng-redux.js",
   "typings": "./index.d.ts",
   "files": [
-    "dist",
     "lib",
     "es",
     "src",
@@ -16,9 +15,7 @@
     "clean": "rimraf lib dist es",
     "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/ng-redux.js",
     "build:es": "cross-env NODE_ENV=es rollup -c -o es/ng-redux.js",
-    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/ng-redux.js",
-    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/ng-redux.min.js",
-    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "build": "npm run build:commonjs && npm run build:es",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive",
     "prepublish": "npm run clean && npm test && npm run build"
   },
@@ -29,9 +26,9 @@
   "author": "William Buchwalter <wbuchwalter@gmail.com> (http://github.com/wbuchwalter)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wbuchwalter/ng-redux/issues"
+    "url": "https://github.com/angular-redux/ng-redux/issues"
   },
-  "homepage": "https://github.com/wbuchwalter/ng-redux#readme",
+  "homepage": "https://github.com/angular-redux/ng-redux#readme",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-plugin-transform-runtime": "^6.23.0",

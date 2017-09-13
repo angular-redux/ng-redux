@@ -23,14 +23,16 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 ## Installation
 #### npm
+
 ```js
 npm install --save ng-redux
 ```
+
 #### bower (deprecated)
-**Warning!** ng-redux will stop being published to bower when version 4.0.0 hits. Bower recommends using yarn and webpack as an alternative for new projects.
+**Warning!** Bower recommends using yarn and webpack as an alternative for new projects. `ng-redux` will no longer version compiled versions of code. The latest version of ng-redux supported for bower use is `3.5.2`
 
 ```js
-bower install --save ng-redux
+bower install --save ng-redux#3.5.2
 ```
 
 Add the following script tag to your html:
