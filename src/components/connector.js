@@ -52,8 +52,8 @@ export default function Connector(store) {
       const unsubscribe = store.subscribe(() => {
         const nextSlice = getStateSlice(store.getState(), finalMapStateToTarget);
         if (!shallowEqual(slice, nextSlice)) {
+          updateTarget(target, nextSlice, boundActionCreators, slice);
           slice = nextSlice;
-          updateTarget(target, slice, boundActionCreators);
         }
       });
       return unsubscribe;
@@ -62,9 +62,9 @@ export default function Connector(store) {
   }
 }
 
-function updateTarget(target, StateSlice, dispatch) {
+function updateTarget(target, StateSlice, dispatch, prevStateSlice) {
   if(isFunction(target)) {
-    target(StateSlice, dispatch);
+    target(StateSlice, dispatch, prevStateSlice);
   } else {
     assign(target, StateSlice, dispatch);
   }
