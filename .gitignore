@@ -6,3 +6,4 @@ es
 coverage
 *.tgz
 examples/**/dist
+.idea
