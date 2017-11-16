@@ -208,7 +208,7 @@ angular.module('ngapplication').config(($ngReduxProvider) => {
 });
 ```
 
-This will debounce the digest for 100ms with a maximum defaly time of 500ms. Every store modification within this time will be handled by this digest.
+This will debounce the digest for 100ms with a maximum delay time of 500ms. Every store modification within this time will be handled by this delayed digest.
 
 [lodash.debounce](https://lodash.com/docs/4.17.4#debounce) is used for the debouncing.
 
