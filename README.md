@@ -192,7 +192,7 @@ Middlewares passed as **string** will then be resolved throught angular's inject
 ## Config
 
 ### Debouncing the digest
-You can debounce the digest triggered by store modification (usefull in huge apps with a  lot of store modification) by passing a config parameter to the `ngReduxProvider`.
+You can debounce the digest triggered by store modification (usefull in huge apps with a  lot of store modifications) by passing a config parameter to the `ngReduxProvider`.
 
 ```javascript
 import angular from 'angular';
