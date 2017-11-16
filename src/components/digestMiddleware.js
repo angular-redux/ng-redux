@@ -1,17 +1,13 @@
-let toRun;
+import debounce from 'lodash.debounce';
 
 export default function digestMiddleware($rootScope, debounceConfig) {
+  let debouncedFunction = $rootScope.$evalAsync;
+  if(debounceConfig && debounceConfig.wait && debounceConfig.wait > 0) {
+    debouncedFunction = debounce($rootScope.$evalAsync, debounceConfig.wait, { maxWait: debounceConfig.maxWait });
+  }
   return store => next => action => {
     const res = next(action);
-    if(debounceConfig && debounceConfig.wait && debounceConfig.wait > 0) {
-      toRun = res;
-      window.setTimeout(() => {
-        $rootScope.$evalAsync(toRun);
-        toRun = undefined;
-      }, debounceConfig.wait);
-    } else {
-      $rootScope.$evalAsync(toRun);
-    }
+    debouncedFunction(res);
     return res;
   };
 }
