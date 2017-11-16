@@ -44,6 +44,7 @@ export default function ngReduxProvider() {
   this.config = {
     debounce: {
       wait: undefined,
+      maxWait: undefined,
     },
   };
 
@@ -83,7 +84,7 @@ export default function ngReduxProvider() {
     const middlewares = applyMiddleware(...resolvedMiddleware);
 
     // compose enhancers with middleware and create store.
-    const store = createStore(_reducer, _initialState, compose(...resolvedStoreEnhancer, middlewares));
+    const store = createStore(_reducer, _initialState, compose(middlewares, ...resolvedStoreEnhancer));
 
     return assign({}, store, { connect: Connector(store) });
   };
