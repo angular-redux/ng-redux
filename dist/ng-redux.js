@@ -9,7 +9,7 @@ var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 
 
 
 function unwrapExports (x) {
-	return x && x.__esModule ? x['default'] : x;
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 }
 
 function createCommonjsModule(fn, module) {
@@ -57,7 +57,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 });
 
 var _core = createCommonjsModule(function (module) {
-var core = module.exports = { version: '2.5.0' };
+var core = module.exports = { version: '2.5.3' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 });
 
@@ -468,7 +468,7 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
   var VALUES_BUG = false;
   var proto = Base.prototype;
   var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
-  var $default = $native || getMethod(DEFAULT);
+  var $default = (!BUGGY && $native) || getMethod(DEFAULT);
   var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
   var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
   var methods, key, IteratorPrototype;
@@ -640,6 +640,8 @@ var from = createCommonjsModule(function (module) {
 module.exports = { "default": from$2, __esModule: true };
 });
 
+unwrapExports(from);
+
 var toConsumableArray = createCommonjsModule(function (module, exports) {
 "use strict";
 
@@ -706,6 +708,8 @@ var defineProperty$3 = function defineProperty(it, key, desc) {
 var defineProperty$1 = createCommonjsModule(function (module) {
 module.exports = { "default": defineProperty$3, __esModule: true };
 });
+
+unwrapExports(defineProperty$1);
 
 var defineProperty = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -858,6 +862,8 @@ var iterator = createCommonjsModule(function (module) {
 module.exports = { "default": iterator$2, __esModule: true };
 });
 
+unwrapExports(iterator);
+
 var _meta = createCommonjsModule(function (module) {
 var META = _uid('meta');
 
@@ -918,15 +924,6 @@ var defineProperty$5 = _objectDp.f;
 var _wksDefine = function (name) {
   var $Symbol = _core.Symbol || (_core.Symbol = _library ? {} : _global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$5($Symbol, name, { value: _wksExt.f(name) });
-};
-
-var _keyof = function (object, el) {
-  var O = _toIobject(object);
-  var keys = _objectKeys(O);
-  var length = keys.length;
-  var index = 0;
-  var key;
-  while (length > index) if (O[key = keys[index++]] === el) return key;
 };
 
 // all enumerable object keys, includes symbols
@@ -1180,9 +1177,9 @@ _export(_export.S + _export.F * !USE_NATIVE, 'Symbol', {
       : SymbolRegistry[key] = $Symbol(key);
   },
   // 19.4.2.5 Symbol.keyFor(sym)
-  keyFor: function keyFor(key) {
-    if (isSymbol(key)) return _keyof(SymbolRegistry, key);
-    throw TypeError(key + ' is not a symbol!');
+  keyFor: function keyFor(sym) {
+    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol!');
+    for (var key in SymbolRegistry) if (SymbolRegistry[key] === sym) return key;
   },
   useSetter: function () { setter = true; },
   useSimple: function () { setter = false; }
@@ -1212,15 +1209,14 @@ $JSON && _export(_export.S + _export.F * (!USE_NATIVE || _fails(function () {
   return _stringify([S]) != '[null]' || _stringify({ a: S }) != '{}' || _stringify(Object(S)) != '{}';
 })), 'JSON', {
   stringify: function stringify(it) {
-    if (it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
     var args = [it];
     var i = 1;
     var replacer, $replacer;
     while (arguments.length > i) args.push(arguments[i++]);
-    replacer = args[1];
-    if (typeof replacer == 'function') $replacer = replacer;
-    if ($replacer || !_isArray(replacer)) replacer = function (key, value) {
-      if ($replacer) value = $replacer.call(this, key, value);
+    $replacer = replacer = args[1];
+    if (!_isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
+    if (!_isArray(replacer)) replacer = function (key, value) {
+      if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
       if (!isSymbol(value)) return value;
     };
     args[1] = replacer;
@@ -1241,11 +1237,13 @@ _wksDefine('asyncIterator');
 
 _wksDefine('observable');
 
-var index$2 = _core.Symbol;
+var symbol$2 = _core.Symbol;
 
 var symbol = createCommonjsModule(function (module) {
-module.exports = { "default": index$2, __esModule: true };
+module.exports = { "default": symbol$2, __esModule: true };
 });
+
+unwrapExports(symbol);
 
 var _typeof_1 = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -2266,7 +2264,7 @@ function isPlainObject$2(value) {
     Ctor instanceof Ctor && funcToString$1.call(Ctor) == objectCtorString$1);
 }
 
-var index$4 = isPlainObject$2;
+var lodash_isplainobject = isPlainObject$2;
 
 /**
  * lodash 3.0.8 (Custom Build) <https://lodash.com/>
@@ -2342,7 +2340,7 @@ function isObject$2(value) {
   return !!value && (type == 'object' || type == 'function');
 }
 
-var index$5 = isFunction;
+var lodash_isfunction = isFunction;
 
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
@@ -2380,7 +2378,7 @@ function isObject$3(value) {
   return !!value && (type == 'object' || type == 'function');
 }
 
-var index$6 = isObject$3;
+var lodash_isobject = isObject$3;
 
 var assign$4 = _Object$assign;
 var defaultMapStateToTarget = function defaultMapStateToTarget() {
@@ -2395,14 +2393,14 @@ function Connector(store) {
 
     var finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
-    var finalMapDispatchToTarget = index$4(mapDispatchToTarget) ? wrapActionCreators(mapDispatchToTarget) : mapDispatchToTarget || defaultMapDispatchToTarget;
+    var finalMapDispatchToTarget = lodash_isplainobject(mapDispatchToTarget) ? wrapActionCreators(mapDispatchToTarget) : mapDispatchToTarget || defaultMapDispatchToTarget;
 
-    invariant_1(index$5(finalMapStateToTarget), 'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget);
+    invariant_1(lodash_isfunction(finalMapStateToTarget), 'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget);
 
-    invariant_1(index$4(finalMapDispatchToTarget) || index$5(finalMapDispatchToTarget), 'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget);
+    invariant_1(lodash_isplainobject(finalMapDispatchToTarget) || lodash_isfunction(finalMapDispatchToTarget), 'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget);
 
     var slice = getStateSlice(store.getState(), finalMapStateToTarget, false);
-    var isFactory = index$5(slice);
+    var isFactory = lodash_isfunction(slice);
 
     if (isFactory) {
       finalMapStateToTarget = slice;
@@ -2413,7 +2411,7 @@ function Connector(store) {
 
     return function (target) {
 
-      invariant_1(index$5(target) || index$6(target), 'The target parameter passed to connect must be a Function or a object.');
+      invariant_1(lodash_isfunction(target) || lodash_isobject(target), 'The target parameter passed to connect must be a Function or a object.');
 
       //Initial update
       updateTarget(target, slice, boundActionCreators);
@@ -2431,7 +2429,7 @@ function Connector(store) {
 }
 
 function updateTarget(target, StateSlice, dispatch) {
-  if (index$5(target)) {
+  if (lodash_isfunction(target)) {
     target(StateSlice, dispatch);
   } else {
     assign$4(target, StateSlice, dispatch);
@@ -2444,9 +2442,9 @@ function getStateSlice(state, mapStateToScope) {
   var slice = mapStateToScope(state);
 
   if (shouldReturnObject) {
-    invariant_1(index$4(slice), '`mapStateToScope` must return an object. Instead received %s.', slice);
+    invariant_1(lodash_isplainobject(slice), '`mapStateToScope` must return an object. Instead received %s.', slice);
   } else {
-    invariant_1(index$4(slice) || index$5(slice), '`mapStateToScope` must return an object or a function. Instead received %s.', slice);
+    invariant_1(lodash_isplainobject(slice) || lodash_isfunction(slice), '`mapStateToScope` must return an object or a function. Instead received %s.', slice);
   }
 
   return slice;
@@ -3692,9 +3690,9 @@ function identity(value) {
 // Assign default placeholders.
 curry.placeholder = {};
 
-var index$7 = curry;
+var lodash_curry$1 = curry;
 
-var index$8 = createCommonjsModule(function (module, exports) {
+var lodash_map = createCommonjsModule(function (module, exports) {
 /**
  * lodash (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -6065,7 +6063,7 @@ module.exports = map;
 
 var isArray = Array.isArray;
 
-var typeIs = index$7(function (type, val) {
+var typeIs = lodash_curry$1(function (type, val) {
   return (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === type;
 });
 var isObject = typeIs('object');
@@ -6080,15 +6078,15 @@ function ngReduxProvider() {
   var _reducerIsObject = undefined;
 
   this.createStoreWith = function (reducer, middlewares, storeEnhancers, initialState) {
-    invariant_1(index$5(reducer) || isObject(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
+    invariant_1(lodash_isfunction(reducer) || isObject(reducer), 'The reducer parameter passed to createStoreWith must be a Function or an Object. Instead received %s.', typeof reducer === 'undefined' ? 'undefined' : _typeof(reducer));
 
     invariant_1(!storeEnhancers || isArray(storeEnhancers), 'The storeEnhancers parameter passed to createStoreWith must be an Array. Instead received %s.', typeof storeEnhancers === 'undefined' ? 'undefined' : _typeof(storeEnhancers));
 
     _reducer = reducer;
     _reducerIsObject = isObject(reducer);
-    _storeEnhancers = storeEnhancers;
+    _storeEnhancers = storeEnhancers || [];
     _middlewares = middlewares || [];
-    _initialState = initialState;
+    _initialState = initialState || {};
   };
 
   this.$get = function ($injector) {
@@ -6096,13 +6094,13 @@ function ngReduxProvider() {
       return isString(middleware) ? $injector.get(middleware) : middleware;
     };
 
-    var resolvedMiddleware = index$8(_middlewares, resolveMiddleware);
+    var resolvedMiddleware = lodash_map(_middlewares, resolveMiddleware);
 
     var resolveStoreEnhancer = function resolveStoreEnhancer(storeEnhancer) {
       return isString(storeEnhancer) ? $injector.get(storeEnhancer) : storeEnhancer;
     };
 
-    var resolvedStoreEnhancer = index$8(_storeEnhancers, resolveStoreEnhancer);
+    var resolvedStoreEnhancer = lodash_map(_storeEnhancers, resolveStoreEnhancer);
 
     if (_reducerIsObject) {
       var getReducerKey = function getReducerKey(key) {
@@ -6118,12 +6116,14 @@ function ngReduxProvider() {
       _reducer = combineReducers(reducersObj);
     }
 
-    var finalCreateStore = resolvedStoreEnhancer ? compose.apply(undefined, _toConsumableArray(resolvedStoreEnhancer))(createStore) : createStore;
-
-    //digestMiddleware needs to be the last one.
+    // digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    var store = _initialState ? applyMiddleware.apply(undefined, _toConsumableArray(resolvedMiddleware))(finalCreateStore)(_reducer, _initialState) : applyMiddleware.apply(undefined, _toConsumableArray(resolvedMiddleware))(finalCreateStore)(_reducer);
+    // combine middleware into a store enhancer.
+    var middlewares = applyMiddleware.apply(undefined, _toConsumableArray(resolvedMiddleware));
+
+    // compose enhancers with middleware and create store.
+    var store = createStore(_reducer, _initialState, compose.apply(undefined, _toConsumableArray(resolvedStoreEnhancer).concat([middlewares])));
 
     return assign({}, store, { connect: Connector(store) });
   };
@@ -6131,9 +6131,9 @@ function ngReduxProvider() {
   this.$get.$inject = ['$injector'];
 }
 
-var index$1 = angular.module('ngRedux', []).provider('$ngRedux', ngReduxProvider).name;
+var index = angular.module('ngRedux', []).provider('$ngRedux', ngReduxProvider).name;
 
-return index$1;
+return index;
 
 })));
 //# sourceMappingURL=ng-redux.js.map

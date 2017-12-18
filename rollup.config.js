@@ -9,6 +9,9 @@ const env = process.env.NODE_ENV;
 const config = {
   entry: 'src/index.js',
   plugins: [],
+  globals: {
+    redux: 'Redux'
+  },
 };
 
 const externals = Object.keys(dependencies).join('|');
