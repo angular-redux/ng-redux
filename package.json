@@ -17,7 +17,8 @@
     "build:es": "cross-env NODE_ENV=es rollup -c -o es/ng-redux.js",
     "build": "npm run build:commonjs && npm run build:es",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive",
-    "prepublish": "npm run clean && npm test && npm run build"
+    "prepublish": "npm run clean && npm test && npm run build",
+    "prerelease": "npm run prepublish"
   },
   "repository": {
     "type": "git",
@@ -43,8 +44,8 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^2.0.1",
-    "semantic-release": "^4.3.5",
-    "sinon": "^3.2.0"
+    "sinon": "^3.2.0",
+    "standard-version": "^4.2.0"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
@@ -55,8 +56,5 @@
     "lodash.isplainobject": "^4.0.6",
     "lodash.map": "^4.6.0",
     "redux": "^3.7.2"
-  },
-  "czConfig": {
-    "path": "node_modules/cz-conventional-changelog"
   }
 }
