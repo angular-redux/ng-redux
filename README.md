@@ -5,6 +5,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 [![build status](https://img.shields.io/travis/angular-redux/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/ng-redux/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg)](https://conventionalcommits.org)
 
 
 *ngRedux lets you easily connect your angular components with Redux.*
