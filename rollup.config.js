@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
-import { dependencies } from './package.json'
+import { dependencies, devDependencies } from './package.json'
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -11,7 +11,10 @@ const config = {
   plugins: [],
 };
 
-const externals = Object.keys(dependencies).join('|');
+const externals = [
+  ...Object.keys(dependencies),
+  ...Object.keys(devDependencies),
+].join('|');
 
 if (env === 'es' || env === 'cjs') {
   config.format = env;
@@ -28,6 +31,10 @@ if (env === 'development' || env === 'production') {
   config.format = 'umd';
   config.moduleName = 'NgRedux';
   config.sourceMap = true;
+  config.external = ['redux'];
+  config.globals = {
+    redux: 'Redux',
+  };
   config.plugins.push(
     replace({
       'process.env.NODE_ENV': JSON.stringify(env)
@@ -38,7 +45,7 @@ if (env === 'development' || env === 'production') {
     commonjs(),
     babel({
       runtimeHelpers: true,
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     })
   )
 }

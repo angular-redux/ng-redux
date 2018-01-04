@@ -9,17 +9,20 @@
     "lib",
     "es",
     "src",
+    "umd",
     "index.d.ts"
   ],
   "scripts": {
-    "clean": "rimraf lib dist es",
-    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/ng-redux.js",
     "build:es": "cross-env NODE_ENV=es rollup -c -o es/ng-redux.js",
-    "build": "npm run build:commonjs && npm run build:es",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive",
+    "build:umd": "cross-env NODE_ENV=development rollup -c -o umd/ng-redux.js",
+    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o umd/ng-redux.min.js",
+    "clean": "rimraf lib umd es",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepublish": "npm run clean && npm test && npm run build",
-    "prerelease": "npm run prepublish"
+    "prerelease": "npm run prepublish",
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive"
   },
   "repository": {
     "type": "git",
@@ -41,6 +44,7 @@
     "expect": "^1.20.2",
     "husky": "^0.14.3",
     "mocha": "^3.5.0",
+    "redux": "^3.7.2",
     "rimraf": "^2.6.1",
     "rollup": "^0.47.4",
     "rollup-plugin-babel": "^3.0.2",
@@ -58,7 +62,9 @@
     "lodash.isfunction": "^3.0.8",
     "lodash.isobject": "^3.0.2",
     "lodash.isplainobject": "^4.0.6",
-    "lodash.map": "^4.6.0",
-    "redux": "^3.7.2"
+    "lodash.map": "^4.6.0"
+  },
+  "peerDependencies": {
+    "redux": "^3.0.0"
   }
 }
