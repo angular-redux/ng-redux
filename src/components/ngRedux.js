@@ -84,7 +84,10 @@ export default function ngReduxProvider() {
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    const store = applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState || undefined)
+    const store = _initialState
+      ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
+      : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
+
     const mergedStore = assign({}, store, { connect: Connector(store) });
     
     if (_providedStore) wrapStore(_providedStore, mergedStore)
