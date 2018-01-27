@@ -24,10 +24,11 @@ export default function ngReduxProvider() {
   let _reducerIsObject = undefined;
   let _providedStore = undefined;
 
-  this.provideStore = (store) => {
+  this.provideStore = (store, middlewares = [], storeEnhancers) => {
     _providedStore = store;
     _reducer = (state, action) => action.payload;
-    _middlewares = [providedStoreMiddleware(_providedStore)];
+    _storeEnhancers = storeEnhancers;
+    _middlewares = [...middlewares, providedStoreMiddleware(store)];
   }
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
@@ -45,7 +46,7 @@ export default function ngReduxProvider() {
 
     _reducer = reducer;
     _reducerIsObject = isObject(reducer);
-    _storeEnhancers = storeEnhancers
+    _storeEnhancers = storeEnhancers;
     _middlewares = middlewares || [];
     _initialState = initialState;
   };
@@ -90,7 +91,7 @@ export default function ngReduxProvider() {
 
     const mergedStore = assign({}, store, { connect: Connector(store) });
     
-    if (_providedStore) wrapStore(_providedStore, mergedStore)
+    if (_providedStore) wrapStore(_providedStore, mergedStore);
 
     return mergedStore;
   };
