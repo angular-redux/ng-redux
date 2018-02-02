@@ -37,4 +37,4 @@ declare namespace ngRedux {
 
 declare var ngRedux: string;
 export as namespace ngRedux;
-export = ngRedux;
+export default ngRedux;
