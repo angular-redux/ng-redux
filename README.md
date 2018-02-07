@@ -30,16 +30,24 @@ npm install --save ng-redux
 ```
 
 #### bower (deprecated)
-**Warning!** Bower recommends using yarn and webpack as an alternative for new projects. `ng-redux` will no longer version compiled versions of code. The latest version of ng-redux supported for bower use is `3.5.2`
+**Warning!** Starting with 4.0.0, we will no longer be publishing new releases on Bower. You can continue using Bower for old releases, or point your bower config to the UMD build hosted on unpkg that mirrors our npm releases.
 
-```js
-bower install --save ng-redux#3.5.2
+```json
+{
+  "dependencies": {
+    "ng-redux": "https://unpkg.com/ng-redux/umd/ng-redux.min.js"
+  }
+}
 ```
 
 Add the following script tag to your html:
-
 ```html
 <script src="bower_components/ng-redux/dist/ng-redux.js"></script>
+```
+
+Or directly from unpkg
+```html
+<script src="https://unpkg.com/ng-redux/umd/ng-redux.min.js"></script>
 ```
 
 ## Quick Start
