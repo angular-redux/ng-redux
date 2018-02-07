@@ -135,7 +135,7 @@ Creates the Redux store, and allow `connect()` to access it.
 #### Arguments: 
 * `reducer` \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
 * [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
-* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
+* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](https://github.com/reactjs/redux/blob/master/docs/Glossary.md#store-enhancer)
 * [`initialState`] \(*Object*): Optional, the initial state of your Redux store.
 
 
