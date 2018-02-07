@@ -2,6 +2,8 @@ import Connector from './connector';
 import invariant from 'invariant';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
+import providedStoreMiddleware from './providedStoreMiddleware';
+import wrapStore from './storeWrapper';
 
 import curry from 'lodash.curry';
 import isFunction from 'lodash.isfunction';
@@ -20,6 +22,14 @@ export default function ngReduxProvider() {
   let _storeEnhancers = undefined;
   let _initialState = undefined;
   let _reducerIsObject = undefined;
+  let _providedStore = undefined;
+
+  this.provideStore = (store, middlewares = [], storeEnhancers) => {
+    _providedStore = store;
+    _reducer = (state, action) => action.payload;
+    _storeEnhancers = storeEnhancers;
+    _middlewares = [...middlewares, providedStoreMiddleware(store)];
+  }
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
@@ -79,7 +89,11 @@ export default function ngReduxProvider() {
     // compose enhancers with middleware and create store.
     const store = createStore(_reducer, _initialState, compose(...resolvedStoreEnhancer, middlewares));
 
-    return assign({}, store, { connect: Connector(store) });
+    const mergedStore = assign({}, store, { connect: Connector(store) });
+    
+    if (_providedStore) wrapStore(_providedStore, mergedStore);
+
+    return mergedStore;
   };
 
   this.$get.$inject = ['$injector'];
