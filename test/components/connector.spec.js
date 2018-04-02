@@ -18,7 +18,12 @@ describe('Connector', () => {
       baz: -1
     };
     store = createStore((state = defaultState, action) => {
-      return assign({}, state, { baz: action.payload });
+      switch (action.type) {
+        case 'ACTION':
+          return assign({}, state, { baz: action.payload });
+        default:
+          return state;
+      }
     });
     targetObj = {};
     connect = Connector(store);
@@ -107,6 +112,22 @@ describe('Connector', () => {
     let receivedDispatch;
     connect(() => ({}), dispatch => { receivedDispatch = dispatch })(targetObj);
     expect(receivedDispatch).toBe(store.dispatch);
+  });
+
+  it('Should provide state slice, bound actions and previous state slice to target (function)', () => {
+    const targetFunc = sinon.spy();
+
+    connect(state => state, {})(targetFunc);
+
+    expect(targetFunc.calledWith(defaultState, {}, undefined)).toBeTruthy();
+
+    store.dispatch({ type: 'ACTION', payload: 2 });
+
+    expect(targetFunc.calledWith(
+      assign({}, defaultState, { baz: 2 }),
+      {},
+      defaultState)
+    ).toBeTruthy();
   });
 
 });
