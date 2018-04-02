@@ -1,3 +1,5 @@
+import { Unsubscribe } from 'redux';
+
 declare namespace ngRedux {
   export interface Reducer extends Function {
       (state: any, action: any): any;
@@ -21,7 +23,7 @@ declare namespace ngRedux {
       replaceReducer(nextReducer: Reducer): void;
       dispatch(action: any): any;
       getState(): any;
-      subscribe(listener: Function): Function;
+      subscribe(listener: Function): Unsubscribe;
       connect(
           mapStateToTarget: (state: any) => Object,
           mapDispatchToTarget?: Object | ((dispatch: Function) => Object)
@@ -35,4 +37,4 @@ declare namespace ngRedux {
 
 declare var ngRedux: string;
 export as namespace ngRedux;
-export = ngRedux;
+export default ngRedux;

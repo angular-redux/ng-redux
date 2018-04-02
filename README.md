@@ -5,6 +5,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 [![build status](https://img.shields.io/travis/angular-redux/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/ng-redux/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg)](https://conventionalcommits.org)
 
 
 *ngRedux lets you easily connect your angular components with Redux.*
@@ -23,20 +24,30 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 
 ## Installation
 #### npm
+
 ```js
 npm install --save ng-redux
 ```
-#### bower (deprecated)
-**Warning!** ng-redux will stop being published to bower when version 4.0.0 hits. Bower recommends using yarn and webpack as an alternative for new projects.
 
-```js
-bower install --save ng-redux
+#### bower (deprecated)
+**Warning!** Starting with 4.0.0, we will no longer be publishing new releases on Bower. You can continue using Bower for old releases, or point your bower config to the UMD build hosted on unpkg that mirrors our npm releases.
+
+```json
+{
+  "dependencies": {
+    "ng-redux": "https://unpkg.com/ng-redux/umd/ng-redux.min.js"
+  }
+}
 ```
 
 Add the following script tag to your html:
-
 ```html
 <script src="bower_components/ng-redux/dist/ng-redux.js"></script>
+```
+
+Or directly from unpkg
+```html
+<script src="https://unpkg.com/ng-redux/umd/ng-redux.min.js"></script>
 ```
 
 ## Quick Start
@@ -124,7 +135,7 @@ Creates the Redux store, and allow `connect()` to access it.
 #### Arguments: 
 * `reducer` \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
 * [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
-* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
+* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](https://github.com/reactjs/redux/blob/master/docs/Glossary.md#store-enhancer)
 * [`initialState`] \(*Object*): Optional, the initial state of your Redux store.
 
 
