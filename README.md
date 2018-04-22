@@ -203,7 +203,7 @@ angular.module('ngapplication').config(($ngReduxProvider) => {
   // eslint-disable-next-line
   $ngReduxProvider.config.debounce = {
     wait: 100,
-    mawWait: 500,
+    maxWait: 500,
   };
 });
 ```
