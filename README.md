@@ -18,6 +18,7 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [API](#api)
 - [Dependency Injectable Middleware](#dependency-injectable-middleware)
 - [Routers](#routers)
+- [Config](#config)
 - [Using DevTools](#using-devtools)
 - [Additional Resources](#additional-resources)
 
@@ -198,6 +199,29 @@ $ngReduxProvider.createStoreWith(reducers, [thunk, 'myInjectableMiddleware']);
 ```
 
 Middlewares passed as **string** will then be resolved throught angular's injector.
+
+## Config
+
+### Debouncing the digest
+You can debounce the digest triggered by store modification (usefull in huge apps with a  lot of store modifications) by passing a config parameter to the `ngReduxProvider`.
+
+```javascript
+import angular from 'angular';
+
+angular.module('ngapplication').config(($ngReduxProvider) => {
+  'ngInject';
+
+  // eslint-disable-next-line
+  $ngReduxProvider.config.debounce = {
+    wait: 100,
+    maxWait: 500,
+  };
+});
+```
+
+This will debounce the digest for 100ms with a maximum delay time of 500ms. Every store modification within this time will be handled by this delayed digest.
+
+[lodash.debounce](https://lodash.com/docs/4.17.4#debounce) is used for the debouncing.
 
 ## Routers
 See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redux and UI-Router work together. <br>

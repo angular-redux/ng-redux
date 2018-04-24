@@ -7,3 +7,4 @@ umd
 coverage
 *.tgz
 examples/**/dist
+.idea

@@ -51,6 +51,13 @@ export default function ngReduxProvider() {
     _initialState = initialState || {};
   };
 
+  this.config = {
+    debounce: {
+      wait: undefined,
+      maxWait: undefined,
+    },
+  };
+
   this.$get = ($injector) => {
     const resolveMiddleware = middleware => isString(middleware)
       ? $injector.get(middleware)
@@ -81,13 +88,13 @@ export default function ngReduxProvider() {
     }
 
     // digestMiddleware needs to be the last one.
-    resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
+    resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope'), this.config.debounce));
 
     // combine middleware into a store enhancer.
     const middlewares = applyMiddleware(...resolvedMiddleware);
 
     // compose enhancers with middleware and create store.
-    const store = createStore(_reducer, _initialState, compose(...resolvedStoreEnhancer, middlewares));
+    const store = createStore(_reducer, _initialState, compose(middlewares, ...resolvedStoreEnhancer));
 
     const mergedStore = assign({}, store, { connect: Connector(store) });
     
