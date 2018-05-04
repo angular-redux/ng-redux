@@ -18,6 +18,15 @@ declare namespace ngRedux {
       (obj: MiddlewareArg): Function;
   }
 
+  export interface Config {
+      debounce: DebounceConfig;
+  }
+  
+  export interface DebounceConfig {
+      wait?: number;
+      maxWait?: number;
+  }
+
   export interface INgRedux {
       getReducer(): Reducer;
       replaceReducer(nextReducer: Reducer): void;
@@ -32,6 +41,7 @@ declare namespace ngRedux {
 
   export interface INgReduxProvider {
       createStoreWith(reducer: Reducer, middlewares?: Array<Middleware | string>, storeEnhancers?: Function[], initialState?: any): void;
+      config: Config;
   }
 }
 
