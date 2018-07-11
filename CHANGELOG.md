@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="4.1.0-alpha"></a>
+## [4.0.3](https://github.com/wbuchwalter/ng-redux/compare/v4.0.3...v4.1.0-alpha) (2018-07-11)
+
+### Features
+
+* **typings** add provider config types ([3eb5euu](https://github.com/angular-redux/ng-redux/commit/3eb5e42a056f9d01c7adecd7ed85c9262bb65bb4))
+* Debounce of the digests triggered by store modification
+
 <a name="4.0.3"></a>
 ## [4.0.3](https://github.com/wbuchwalter/ng-redux/compare/v4.0.1...v4.0.3) (2018-03-18)
 
