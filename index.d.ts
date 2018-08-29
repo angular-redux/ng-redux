@@ -1,4 +1,4 @@
-import { Action, AnyAction, Unsubscribe } from 'redux';
+import { Action, AnyAction, Store, Unsubscribe } from 'redux';
 
 declare namespace ngRedux {
 
@@ -118,6 +118,14 @@ declare namespace ngRedux {
      * @param initialState
      */
     createStoreWith<S = any, I = any>(reducer: Reducer<S>, middlewares?: (Middleware | string)[], storeEnhancers?: Function[], initialState?: I): void;
+    /**
+     * Initializes ngRedux with an existing Redux store.
+     *
+     * @param store
+     * @param middlewares
+     * @param storeEnhancers
+     */
+    provideStore<S = any>(store: Store<S>, middlewares?: (Middleware | string)[], storeEnhancers?: Function[]): void;
     /**
      * ngRedux config object
      */
