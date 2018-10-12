@@ -58,14 +58,9 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "invariant": "^2.2.2",
-    "lodash.curry": "^4.1.1",
-    "lodash.debounce": "^4.0.8",
-    "lodash.isfunction": "^3.0.8",
-    "lodash.isobject": "^3.0.2",
-    "lodash.isplainobject": "^4.0.6",
-    "lodash.map": "^4.6.0"
+    "lodash": "4.17.11"
   },
   "peerDependencies": {
-    "redux": "^3.0.0"
+    "redux": ">3.0.0"
   }
 }
