@@ -2,7 +2,7 @@ import expect from 'expect';
 let sinon = require('sinon');
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
-import isFunction from 'lodash.isfunction';
+import isFunction from 'lodash/isFunction';
 
 const assign = Object.assign;
 

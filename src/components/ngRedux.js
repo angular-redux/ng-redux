@@ -5,9 +5,9 @@ import digestMiddleware from './digestMiddleware';
 import providedStoreMiddleware from './providedStoreMiddleware';
 import wrapStore from './storeWrapper';
 
-import curry from 'lodash.curry';
-import isFunction from 'lodash.isfunction';
-import map from 'lodash.map';
+import curry from 'lodash/curry';
+import isFunction from 'lodash/isFunction';
+import map from 'lodash/map';
 
 const isArray = Array.isArray;
 
@@ -97,7 +97,7 @@ export default function ngReduxProvider() {
     const store = createStore(_reducer, _initialState, compose(middlewares, ...resolvedStoreEnhancer));
 
     const mergedStore = assign({}, store, { connect: Connector(store) });
-    
+
     if (_providedStore) wrapStore(_providedStore, mergedStore);
 
     return mergedStore;

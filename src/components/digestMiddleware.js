@@ -1,4 +1,4 @@
-import debounce from 'lodash.debounce';
+import debounce from 'lodash/debounce';
 
 export default function digestMiddleware($rootScope, debounceConfig) {
   let debouncedFunction = (expr) => {
