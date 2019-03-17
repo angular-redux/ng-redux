@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
+import { dependencies, devDependencies } from './package.json'
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -10,36 +11,41 @@ const config = {
   plugins: [],
 };
 
+const externals = [
+  ...Object.keys(dependencies),
+  ...Object.keys(devDependencies),
+].join('|');
+
 if (env === 'es' || env === 'cjs') {
   config.format = env;
-  config.external = [
-    'invariant',
-    'lodash.curry',
-    'lodash.isarray',
-    'lodash.isfunction',
-    'lodash.isobject',
-    'lodash.isplainobject',
-    'lodash.map',
-    'redux',
-  ];
+  config.sourceMap = true;
+  config.external = id => RegExp(`^(${externals})(\/.*)?$`).test(id);
   config.plugins.push(
-    babel()
+    babel({
+      runtimeHelpers: true,
+    })
   )
 }
 
 if (env === 'development' || env === 'production') {
   config.format = 'umd';
   config.moduleName = 'NgRedux';
+  config.sourceMap = true;
+  config.external = ['redux'];
+  config.globals = {
+    redux: 'Redux',
+  };
   config.plugins.push(
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
     nodeResolve({
       jsnext: true,
     }),
     commonjs(),
     babel({
-      exclude: 'node_modules/**'
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify(env)
+      runtimeHelpers: true,
+      exclude: 'node_modules/**',
     })
   )
 }

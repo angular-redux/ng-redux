@@ -3,6 +3,8 @@ npm-debug.log
 .DS_Store
 lib
 es
+umd
 coverage
 *.tgz
 examples/**/dist
+.idea

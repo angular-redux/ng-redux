@@ -1,10 +1,11 @@
 # ng-redux
 ###### Angular bindings for [Redux](https://github.com/gaearon/redux).
 
-For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
+For Angular 2+ see [angular-redux/store](https://github.com/angular-redux/store) -- made by the same people that started `ng-redux`.
 
 [![build status](https://img.shields.io/travis/angular-redux/ng-redux/master.svg?style=flat-square)](https://travis-ci.org/ng-redux/ng-redux)
 [![npm version](https://img.shields.io/npm/v/ng-redux.svg?style=flat-square)](https://www.npmjs.com/package/ng-redux)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg)](https://conventionalcommits.org)
 
 
 *ngRedux lets you easily connect your angular components with Redux.*
@@ -17,24 +18,37 @@ For Angular 2 see [ng2-redux](https://github.com/wbuchwalter/ng2-redux).
 - [API](#api)
 - [Dependency Injectable Middleware](#dependency-injectable-middleware)
 - [Routers](#routers)
+- [Config](#config)
 - [Using DevTools](#using-devtools)
 - [Additional Resources](#additional-resources)
 
 
 ## Installation
 #### npm
+
 ```js
 npm install --save ng-redux
 ```
-#### bower
-```js
-bower install --save ng-redux
+
+#### bower (deprecated)
+**Warning!** Starting with 4.0.0, we will no longer be publishing new releases on Bower. You can continue using Bower for old releases, or point your bower config to the UMD build hosted on unpkg that mirrors our npm releases.
+
+```json
+{
+  "dependencies": {
+    "ng-redux": "https://unpkg.com/ng-redux/umd/ng-redux.min.js"
+  }
+}
 ```
 
 Add the following script tag to your html:
-
 ```html
 <script src="bower_components/ng-redux/dist/ng-redux.js"></script>
+```
+
+Or directly from unpkg
+```html
+<script src="https://unpkg.com/ng-redux/umd/ng-redux.min.js"></script>
 ```
 
 ## Quick Start
@@ -62,7 +76,6 @@ With an object:
 
 ```JS
 import reducers from './reducers';
-import { combineReducers } from 'redux';
 import loggingMiddleware from './loggingMiddleware';
 import ngRedux from 'ng-redux';
 import reducer3 from './reducer3';
@@ -79,6 +92,22 @@ angular.module('app', [ngRedux])
 ```
 In this example `reducer1` will be resolved using angular's DI after the config phase.
 
+Alternatively, you can pass an already existing store to ngRedux using `provideStore`:
+
+```JS
+import reducers from './reducers';
+import { createStore, combineReducers } from 'redux';
+import ngRedux from 'ng-redux';
+
+const reducer = combineReducers(reducers);
+const store = createStore(reducer);
+
+angular.module('app', [ngRedux])
+.config(($ngReduxProvider) => {
+    $ngReduxProvider.provideStore(store);
+  });
+```
+
 #### Usage
 
 *Using controllerAs syntax*
@@ -87,9 +116,9 @@ import * as CounterActions from '../actions/counter';
 
 class CounterController {
   constructor($ngRedux, $scope) {
-    /* ngRedux will merge the requested state's slice and actions onto this, 
+    /* ngRedux will merge the requested state's slice and actions onto this,
     you don't need to redefine them in your controller */
-    
+
     let unsubscribe = $ngRedux.connect(this.mapStateToThis, CounterActions)(this);
     $scope.$on('$destroy', unsubscribe);
   }
@@ -119,10 +148,10 @@ class CounterController {
 
 Creates the Redux store, and allow `connect()` to access it.
 
-#### Arguments: 
+#### Arguments:
 * `reducer` \(*Function*): A single reducer composed of all other reducers (create with redux.combineReducer)
 * [`middlewares`] \(*Function[]*): Optional, An array containing all the middleware that should be applied. Functions and strings are both valid members. String will be resolved via Angular, allowing you to use dependency injection in your middlewares.
-* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](http://rackt.github.io/redux/docs/Glossary.html#store-enhancer)
+* [`storeEnhancers`] \(*Function[]*): Optional, this will be used to create the store, in most cases you don't need to pass anything, see [Store Enhancer official documentation.](https://github.com/reactjs/redux/blob/master/docs/Glossary.md#store-enhancer)
 * [`initialState`] \(*Object*): Optional, the initial state of your Redux store.
 
 
@@ -138,7 +167,7 @@ Connects an Angular component to Redux.
 * `target` \(*Object* or *Function*): If passed an object, the results of `mapStateToTarget` and `mapDispatchToTarget` will be merged onto it. If passed a function, the function will receive the results of `mapStateToTarget` and `mapDispatchToTarget` as parameters.
 
 e.g:
-```JS 
+```JS
 connect(this.mapState, this.mapDispatch)(this);
 //Or
 connect(this.mapState, this.mapDispatch)((selectedState, actions) => {/* ... */});
@@ -186,12 +215,35 @@ $ngReduxProvider.createStoreWith(reducers, [thunk, 'myInjectableMiddleware']);
 
 Middlewares passed as **string** will then be resolved throught angular's injector.
 
+## Config
+
+### Debouncing the digest
+You can debounce the digest triggered by store modification (usefull in huge apps with a  lot of store modifications) by passing a config parameter to the `ngReduxProvider`.
+
+```javascript
+import angular from 'angular';
+
+angular.module('ngapplication').config(($ngReduxProvider) => {
+  'ngInject';
+
+  // eslint-disable-next-line
+  $ngReduxProvider.config.debounce = {
+    wait: 100,
+    maxWait: 500,
+  };
+});
+```
+
+This will debounce the digest for 100ms with a maximum delay time of 500ms. Every store modification within this time will be handled by this delayed digest.
+
+[lodash.debounce](https://lodash.com/docs/4.17.4#debounce) is used for the debouncing.
+
 ## Routers
 See [redux-ui-router](https://github.com/neilff/redux-ui-router) to make ng-redux and UI-Router work together. <br>
 See [ng-redux-router](https://github.com/amitport/ng-redux-router) to make ng-redux and angular-route work together.
 
 ## Using DevTools
-There are two options for using Redux DevTools with your angular app.  The first option is to use the [redux-devtools package] (https://www.npmjs.com/package/redux-devtools), 
+There are two options for using Redux DevTools with your angular app.  The first option is to use the [redux-devtools package] (https://www.npmjs.com/package/redux-devtools),
 and the other option is to use the [Redux DevTools Extension] (https://github.com/zalmoxisus/redux-devtools-extension#usage).  The Redux DevTools Extension does not
 require adding the react, react-redux, or redux-devtools packages to your project.
 
@@ -212,14 +264,14 @@ angular.module('app', ['ngRedux'])
       <App store={ $ngRedux }/>,
       document.getElementById('devTools')
     );
-    
+
     //To reflect state changes when disabling/enabling actions via the monitor
     //there is probably a smarter way to achieve that
     $ngRedux.subscribe(() => {
         $timeout(() => {$rootScope.$apply(() => {})}, 100);
     });
   });
-  
+
   class App extends Component {
   render() {
     return (
@@ -249,7 +301,7 @@ angular.module('app', ['ngRedux'])
   .config(($ngReduxProvider) => {
       $ngReduxProvider.createStoreWith(rootReducer, [thunk], [window.__REDUX_DEVTOOLS_EXTENSION__()]);
     })
-  .run(($ngRedux, $rootScope, $timeout) => { 
+  .run(($ngRedux, $rootScope, $timeout) => {
     //To reflect state changes when disabling/enabling actions via the monitor
     //there is probably a smarter way to achieve that
     $ngRedux.subscribe(() => {

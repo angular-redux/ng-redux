@@ -7,14 +7,10 @@
       }
     ]
   ],
+  "plugins": "transform-runtime",
   "env": {
     "test": {
       "presets": ["env"]
-    },
-    "production": {
-      "plugins": [
-        "external-helpers"
-      ]
     }
   }
 }
