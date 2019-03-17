@@ -1,7 +1,10 @@
 node_modules
 npm-debug.log
 .DS_Store
-dist
 lib
+es
+umd
 coverage
 *.tgz
+examples/**/dist
+.idea

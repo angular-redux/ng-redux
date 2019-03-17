@@ -1,4 +1,16 @@
 {
-  "stage": 0,
-  "loose": "all"
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": "transform-runtime",
+  "env": {
+    "test": {
+      "presets": ["env"]
+    }
+  }
 }

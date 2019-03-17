@@ -53,5 +53,14 @@ describe('Utils', () => {
         )
       ).toBe(false);
     });
+
+    it('Should ignore $$hashKey property if present', () => {
+      expect(
+        shallowEqual(
+          { a: 1, b: 2, c: undefined, $$hashKey: 1 },
+          { a: 1, b: 2, c: undefined }
+        )
+      ).toBe(true);
+    });
   });
 });
