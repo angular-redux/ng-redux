@@ -2,18 +2,18 @@ import shallowEqual from '../utils/shallowEqual';
 import wrapActionCreators from '../utils/wrapActionCreators';
 import invariant from 'invariant';
 
-import isPlainObject from 'lodash.isplainobject';
-import isFunction from 'lodash.isfunction';
-import isObject from 'lodash.isobject';
-import assign from 'lodash.assign';
+import isPlainObject from 'lodash/isPlainObject';
+import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
 
+const assign = Object.assign;
 const defaultMapStateToTarget = () => ({});
 const defaultMapDispatchToTarget = dispatch => ({dispatch});
 
 export default function Connector(store) {
   return (mapStateToTarget, mapDispatchToTarget) => {
 
-    const finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
+    let finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
     const finalMapDispatchToTarget = isPlainObject(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
@@ -21,15 +21,21 @@ export default function Connector(store) {
 
     invariant(
       isFunction(finalMapStateToTarget),
-      'mapStateToTarget must be a Function. Instead received $s.', finalMapStateToTarget
+      'mapStateToTarget must be a Function. Instead received %s.', finalMapStateToTarget
       );
 
     invariant(
       isPlainObject(finalMapDispatchToTarget) || isFunction(finalMapDispatchToTarget),
-      'mapDispatchToTarget must be a plain Object or a Function. Instead received $s.', finalMapDispatchToTarget
+      'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget
       );
 
-    let slice = getStateSlice(store.getState(), finalMapStateToTarget);
+    let slice = getStateSlice(store.getState(), finalMapStateToTarget, false);
+    const isFactory = isFunction(slice);
+
+    if (isFactory) {
+      finalMapStateToTarget = slice;
+      slice = getStateSlice(store.getState(), finalMapStateToTarget);
+    }
 
     const boundActionCreators = finalMapDispatchToTarget(store.dispatch);
 
@@ -46,8 +52,8 @@ export default function Connector(store) {
       const unsubscribe = store.subscribe(() => {
         const nextSlice = getStateSlice(store.getState(), finalMapStateToTarget);
         if (!shallowEqual(slice, nextSlice)) {
+          updateTarget(target, nextSlice, boundActionCreators, slice);
           slice = nextSlice;
-          updateTarget(target, slice, boundActionCreators);
         }
       });
       return unsubscribe;
@@ -56,22 +62,30 @@ export default function Connector(store) {
   }
 }
 
-function updateTarget(target, StateSlice, dispatch) {
+function updateTarget(target, StateSlice, dispatch, prevStateSlice) {
   if(isFunction(target)) {
-    target(StateSlice, dispatch);
+    target(StateSlice, dispatch, prevStateSlice);
   } else {
     assign(target, StateSlice, dispatch);
   }
 }
 
-function getStateSlice(state, mapStateToScope) {
+function getStateSlice(state, mapStateToScope, shouldReturnObject = true) {
   const slice = mapStateToScope(state);
 
-  invariant(
-    isPlainObject(slice),
-    '`mapStateToScope` must return an object. Instead received %s.',
-    slice
-    );
+  if (shouldReturnObject) {
+    invariant(
+      isPlainObject(slice),
+      '`mapStateToScope` must return an object. Instead received %s.',
+      slice
+      );
+  } else {
+    invariant(
+      isPlainObject(slice) || isFunction(slice),
+      '`mapStateToScope` must return an object or a function. Instead received %s.',
+      slice
+      );
+  }
 
   return slice;
 }

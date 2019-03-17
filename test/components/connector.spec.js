@@ -2,7 +2,9 @@ import expect from 'expect';
 let sinon = require('sinon');
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
-import isFunction from 'lodash.isfunction';
+import isFunction from 'lodash/isFunction';
+
+const assign = Object.assign;
 
 describe('Connector', () => {
   let store;
@@ -16,7 +18,12 @@ describe('Connector', () => {
       baz: -1
     };
     store = createStore((state = defaultState, action) => {
-      return {...state, baz: action.payload};
+      switch (action.type) {
+        case 'ACTION':
+          return assign({}, state, { baz: action.payload });
+        default:
+          return state;
+      }
     });
     targetObj = {};
     connect = Connector(store);
@@ -30,8 +37,9 @@ describe('Connector', () => {
     expect(connect(() => ({})).bind(connect, () => {})).toNotThrow();
   });
 
-  it('Should throw when selector does not return a plain object', () => {
+  it('Should throw when selector does not return a plain object or a function', () => {
     expect(connect.bind(connect, state => state.foo)).toThrow();
+    expect(connect.bind(connect, state => state => state.foo)).toThrow();
   });
 
   it('Should extend target (Object) with selected state once directly after creation', () => {
@@ -66,6 +74,20 @@ describe('Connector', () => {
 
   });
 
+  it('should update the target (Object) if a function is returned instead of an object', () => {
+    connect(state => state => state)(targetObj);
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(targetObj.baz).toBe(5);
+
+    targetObj.baz = 0;
+
+    //this should not replace our mutation, since the state didn't change
+    store.dispatch({ type: 'ACTION', payload: 5 });
+
+    expect(targetObj.baz).toBe(0);
+  });
+
   it('Should extend target (object) with actionCreators', () => {
     connect(() => ({}), { ac1: () => { }, ac2: () => { } })(targetObj);
     expect(isFunction(targetObj.ac1)).toBe(true);
@@ -90,6 +112,22 @@ describe('Connector', () => {
     let receivedDispatch;
     connect(() => ({}), dispatch => { receivedDispatch = dispatch })(targetObj);
     expect(receivedDispatch).toBe(store.dispatch);
+  });
+
+  it('Should provide state slice, bound actions and previous state slice to target (function)', () => {
+    const targetFunc = sinon.spy();
+
+    connect(state => state, {})(targetFunc);
+
+    expect(targetFunc.calledWith(defaultState, {}, undefined)).toBeTruthy();
+
+    store.dispatch({ type: 'ACTION', payload: 2 });
+
+    expect(targetFunc.calledWith(
+      assign({}, defaultState, { baz: 2 }),
+      {},
+      defaultState)
+    ).toBeTruthy();
   });
 
 });
