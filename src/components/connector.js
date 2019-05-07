@@ -15,7 +15,7 @@ export default function Connector(store) {
 
     let finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
 
-    const finalMapDispatchToTarget = isPlainObject(mapDispatchToTarget) ?
+    const finalMapDispatchToTarget = isObject(mapDispatchToTarget) && !isFunction(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
       mapDispatchToTarget || defaultMapDispatchToTarget;
 
@@ -25,7 +25,7 @@ export default function Connector(store) {
       );
 
     invariant(
-      isPlainObject(finalMapDispatchToTarget) || isFunction(finalMapDispatchToTarget),
+      isObject(finalMapDispatchToTarget) || isFunction(finalMapDispatchToTarget),
       'mapDispatchToTarget must be a plain Object or a Function. Instead received %s.', finalMapDispatchToTarget
       );
 
