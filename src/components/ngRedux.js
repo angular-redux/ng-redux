@@ -23,6 +23,7 @@ export default function ngReduxProvider() {
   let _initialState = undefined;
   let _reducerIsObject = undefined;
   let _providedStore = undefined;
+  let _storeCreator = undefined;
 
   this.provideStore = (store, middlewares = [], storeEnhancers) => {
     _providedStore = store;
@@ -30,6 +31,10 @@ export default function ngReduxProvider() {
     _storeEnhancers = storeEnhancers;
     _middlewares = [...middlewares, providedStoreMiddleware(store)];
   }
+
+  this.createStore = (storeCreator) => {
+    _storeCreator = storeCreator
+  };
 
   this.createStoreWith = (reducer, middlewares, storeEnhancers, initialState) => {
     invariant(
@@ -90,11 +95,15 @@ export default function ngReduxProvider() {
     // digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope'), this.config.debounce));
 
-    // combine middleware into a store enhancer.
-    const middlewares = applyMiddleware(...resolvedMiddleware);
-
-    // compose enhancers with middleware and create store.
-    const store = createStore(_reducer, _initialState, compose(middlewares, ...resolvedStoreEnhancer));
+    let store;
+    if(_storeCreator) {
+      store = _storeCreator(resolvedMiddleware, resolvedStoreEnhancer);
+    } else {
+      // combine middleware into a store enhancer.
+      const middlewares = applyMiddleware(...resolvedMiddleware);
+      // compose enhancers with middleware and create store.
+      store = createStore(_reducer, _initialState, compose(middlewares, ...resolvedStoreEnhancer));
+    }
 
     const mergedStore = assign({}, store, { connect: Connector(store) });
 

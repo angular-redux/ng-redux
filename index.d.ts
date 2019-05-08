@@ -110,6 +110,12 @@ declare namespace ngRedux {
 
   export interface INgReduxProvider {
     /**
+     * callback for creating Redux store.
+     *
+     * @param storeCreator
+     */
+    createStore<S = any>(storeCreator: (middlewares?: (Middleware | string)[], storeEnhancers?: Function[]) => Store<S>): void;
+    /**
      * Creates Redux store.
      *
      * @param reducer
