@@ -55,6 +55,14 @@ Or directly from unpkg
 
 #### Initialization
 
+There are three ways to instantiate ngRedux:
+
+1. [createStoreWith](#createStoreWith)
+2. [provideStore](#provideStore)
+3. [createStore](#createStore)
+
+##### createStoreWith
+
 You can either pass a function or an object to `createStoreWith`.
 
 With a function:
@@ -92,7 +100,9 @@ angular.module('app', [ngRedux])
 ```
 In this example `reducer1` will be resolved using angular's DI after the config phase.
 
-Alternatively, you can pass an already existing store to ngRedux using `provideStore`:
+##### provideStore
+
+You can pass an already existing store to ngRedux using `provideStore`:
 
 ```JS
 import reducers from './reducers';
@@ -105,6 +115,33 @@ const store = createStore(reducer);
 angular.module('app', [ngRedux])
 .config(($ngReduxProvider) => {
     $ngReduxProvider.provideStore(store);
+  });
+```
+
+##### createStore
+
+`createStore` allows you take full control over the store creation. This is handy
+if you want to control the order of enhancers by your self. It takes a function 
+that gets middlewares and enhancers from ngRedux as a parameters. Note that
+middlewares provided by ngRedux needs to be last ones.
+
+```JS
+import reducers from './reducers';
+import { createStore, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
+import ngRedux from 'ng-redux';
+
+const reducer = combineReducers(reducers);
+
+angular.module('app', [ngRedux])
+.config(($ngReduxProvider) => {
+    $ngReduxProvider.createStore((middlewares, enhancers) => {
+        return createStore(
+          reducer,
+          {},
+          compose(applyMiddleware(thunk, ...middlewares), ...enhancers)
+        )
+    });
   });
 ```
 
