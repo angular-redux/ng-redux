@@ -11,7 +11,7 @@ const mockStore = function(callback) {
 };
 
 
-describe.only('storeWrapper', () => {
+describe('storeWrapper', () => {
   it('should pass new state from provided store to ngReduxStore', () => {
     let dispatches = 0;
     const providedStore = createStore((state, action) => action.payload);
