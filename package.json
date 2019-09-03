@@ -1,6 +1,6 @@
 {
   "name": "ng-redux",
-  "version": "4.4.0",
+  "version": "4.4.1",
   "description": "Redux bindings for Angular.js",
   "main": "lib/ng-redux.js",
   "module": "es/ng-redux.js",
@@ -20,6 +20,7 @@
     "build:umd:min": "cross-env NODE_ENV=production rollup -c -o umd/ng-redux.min.js",
     "clean": "rimraf lib umd es",
     "commitmsg": "commitlint -e $GIT_PARAMS",
+    "versionbump": "standard-version",
     "prepublish": "npm run clean && npm test && npm run build",
     "prerelease": "npm run prepublish",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive"
