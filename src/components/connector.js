@@ -11,10 +11,10 @@ const defaultMapStateToTarget = () => ({});
 const defaultMapDispatchToTarget = dispatch => ({dispatch});
 
 export default function Connector(store) {
-  return (mapStateToTarget, mapDispatchToTarget) => {
+  return (mapStateToTarget, mapDispatchToTarget, stateSliceEqualityComparer = null) => {
 
     let finalMapStateToTarget = mapStateToTarget || defaultMapStateToTarget;
-
+    let finalStateSliceEqualityComparer = stateSliceEqualityComparer || shallowEqual;
     const finalMapDispatchToTarget = isObject(mapDispatchToTarget) && !isFunction(mapDispatchToTarget) ?
       wrapActionCreators(mapDispatchToTarget) :
       mapDispatchToTarget || defaultMapDispatchToTarget;
@@ -51,7 +51,8 @@ export default function Connector(store) {
 
       const unsubscribe = store.subscribe(() => {
         const nextSlice = getStateSlice(store.getState(), finalMapStateToTarget);
-        if (!shallowEqual(slice, nextSlice)) {
+        const shouldUpdateTarget = !finalStateSliceEqualityComparer(slice, nextSlice);
+        if (shouldUpdateTarget) {
           updateTarget(target, nextSlice, boundActionCreators, slice);
           slice = nextSlice;
         }
