@@ -1,5 +1,5 @@
 import expect from 'expect';
-let sinon = require('sinon');
+import sinon from 'sinon';
 import { createStore } from 'redux';
 import Connector from '../../src/components/connector';
 import isFunction from 'lodash/isFunction';
@@ -72,6 +72,35 @@ describe('Connector', () => {
 
     expect(targetObj.baz).toBe(0);
 
+  });
+
+  it('should not update targetObj when customStateEqualityComparer return true', () => {
+    const stateEqualityComparer = sinon.fake.returns(true);
+    connect(state => state, null, stateEqualityComparer.fake)(targetObj);
+    store.dispatch({ type: 'ACTION', payload: 5});
+
+    expect(stateEqualityComparer.calledOnceWith({
+      ...defaultState
+    }, {
+      ...defaultState,
+      baz: 5
+    }));
+    expect(targetObj.baz).toBe(5);
+  });
+
+  it('should update the target (Object) when customStateEqualityComparer return false', () => {
+    const stateEqualityComparer = sinon.fake.returns(false);
+    connect(state => state, null, stateEqualityComparer.fake)(targetObj);
+    
+    store.dispatch({ type: 'ACTION', payload: 5});
+    
+    expect(stateEqualityComparer.calledOnceWith({
+      ...defaultState,
+    }, {
+      ...defaultState,
+      baz: 5
+    }));
+    expect(targetObj.baz).toBe(5);
   });
 
   it('should update the target (Object) if a function is returned instead of an object', () => {

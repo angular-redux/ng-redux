@@ -39,6 +39,7 @@
     "@commitlint/cli": "^5.2.8",
     "@commitlint/config-conventional": "^5.2.3",
     "babel-core": "^6.25.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "cross-env": "^5.0.5",
@@ -53,7 +54,7 @@
     "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-replace": "2.0.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "sinon": "^3.2.0",
+    "sinon": "^7.5.0",
     "standard-version": "^4.2.0"
   },
   "dependencies": {
