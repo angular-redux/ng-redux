@@ -59,7 +59,7 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "invariant": "^2.2.2",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.21"
   },
   "peerDependencies": {
     "redux": ">3.0.0"
