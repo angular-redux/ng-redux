@@ -7,7 +7,8 @@ describe('ngRedux provide store functionality', () => {
   let ngRedux = {};
   let $injector = {};
   let $rootScope = {
-    $evalAsync: () => {}
+    $evalAsync: () => {},
+    $on: () => {}
   }
 
   beforeEach(() => {

@@ -107,7 +107,7 @@ export default function ngReduxProvider() {
 
     const mergedStore = assign({}, store, { connect: Connector(store) });
 
-    if (_providedStore) wrapStore(_providedStore, mergedStore, injector.get('$rootScope'));
+    if (_providedStore) wrapStore(_providedStore, mergedStore, $injector.get('$rootScope'));
 
     return mergedStore;
   };

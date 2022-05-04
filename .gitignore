@@ -8,3 +8,4 @@ coverage
 *.tgz
 examples/**/dist
 .idea
+.npmrc

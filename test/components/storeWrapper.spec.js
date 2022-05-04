@@ -10,6 +10,7 @@ const mockStore = function(callback) {
   };
 };
 
+const mockRootScope = { $on: () => {} };
 
 describe('storeWrapper', () => {
   it('should pass new state from provided store to ngReduxStore', () => {
@@ -24,7 +25,7 @@ describe('storeWrapper', () => {
       }
     });
 
-    const wrappedStore = wrapStore(providedStore, ngReduxStore);
+    const wrappedStore = wrapStore(providedStore, ngReduxStore, mockRootScope);
 
     providedStore.dispatch({
       type: 'TEST',
